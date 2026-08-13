@@ -13,14 +13,33 @@ A USC student-led publication on technology, artificial intelligence, ethics, an
 
 ## Setup
 
+These commands must run **inside the project folder**, not from your home directory (`~`). If you see `package.json: No such file or directory`, you are in the wrong folder.
+
 ```bash
+git clone https://github.com/drameh-svg/ShiftBlog.git
+cd ShiftBlog
+git checkout cursor/shift-public-policy-website-9d5f
+
 cp .env.example .env
 npm install
 npm run db:setup
 npm run dev
 ```
 
-The site runs at [http://localhost:3000](http://localhost:3000).
+If you already cloned the repo:
+
+```bash
+cd /path/to/ShiftBlog
+git checkout cursor/shift-public-policy-website-9d5f
+git pull
+
+cp .env.example .env
+npm install
+npm run db:setup
+npm run dev
+```
+
+The site runs at [http://localhost:3000](http://localhost:3000). You should see `SHIFT Public Policy` in the terminal after `npm run dev` starts.
 
 ## Demo accounts
 
