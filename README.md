@@ -39,7 +39,9 @@ npm run db:setup
 npm run dev
 ```
 
-The site runs at [http://localhost:3000](http://localhost:3000). You should see `SHIFT Public Policy` in the terminal after `npm run dev` starts.
+The site runs at [http://localhost:3000](http://localhost:3000) on your Mac.
+
+If you open a Cursor Cloud preview URL (`*.agent.cvm.dev`) and see **HTTP 502**, the app is not running in that cloud session. Refresh after the agent starts `npm run dev`, or use localhost on your machine instead.
 
 ## Demo accounts
 
