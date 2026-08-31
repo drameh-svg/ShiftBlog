@@ -1,0 +1,341 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PUBLIC
+  EDITOR
+  ADMIN
+}
+
+enum StoryStatus {
+  DRAFT
+  IN_REVIEW
+  SCHEDULED
+  PUBLISHED
+  ARCHIVED
+}
+
+enum StoryCategory {
+  NEWS
+  OPINION
+  ANALYSIS
+  EXPLAINER
+  CAMPUS
+  INTERVIEW
+  RESEARCH
+  ESSAY
+}
+
+enum SubmissionStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  ACCEPTED
+  NEEDS_REVISION
+  REJECTED
+}
+
+enum OpportunityStatus {
+  OPEN
+  UPCOMING
+  CLOSING_SOON
+  ONGOING
+  COMPLETED
+}
+
+enum OpportunityType {
+  PANEL
+  LEADERSHIP
+  PETITION
+  MEETING
+  PUBLIC_COMMENT
+  RESEARCH
+  INITIATIVE
+}
+
+enum DiscussionTopic {
+  TRENDING
+  CAMPUS
+  AI
+  POLICY
+  DEBATES
+  GENERAL
+}
+
+enum ReportStatus {
+  OPEN
+  REVIEWED
+  DISMISSED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         Role     @default(PUBLIC)
+  bio          String?
+  title        String?
+  avatarHue    Int      @default(260)
+  createdAt    DateTime @default(now())
+
+  stories             Story[]
+  comments            Comment[]
+  commentReplies      CommentReply[]
+  discussionPosts     DiscussionPost[]
+  discussionVotes     DiscussionVote[]
+  discussionsCreated  Discussion[]      @relation("DiscussionCreator")
+  debateArguments     DebateArgument[]
+  reactions           Reaction[]
+  reports             Report[]
+  ideaSubmissions     IdeaSubmission[]
+  articleSubmissions  ArticleSubmission[]
+  savedStories        SavedStory[]
+}
+
+model Tag {
+  id     String      @id @default(cuid())
+  slug   String      @unique
+  name   String
+  stories StoryTag[]
+}
+
+model Story {
+  id             String        @id @default(cuid())
+  slug           String        @unique
+  title          String
+  subtitle       String?
+  dek            String
+  excerpt        String
+  body           String
+  visualTheme    String        @default("aurora")
+  coverImage     String?
+  socialImage    String?
+  seoDescription String?
+  category       StoryCategory
+  status         StoryStatus   @default(DRAFT)
+  featured       Boolean       @default(false)
+  leadStory      Boolean       @default(false)
+  isBrief        Boolean       @default(false)
+  readingMinutes Int           @default(6)
+  publishedAt    DateTime?
+  scheduledAt    DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  authorId       String
+  author         User          @relation(fields: [authorId], references: [id])
+  tags           StoryTag[]
+  comments       Comment[]
+  savedBy        SavedStory[]
+}
+
+model StoryTag {
+  storyId String
+  tagId   String
+  story   Story  @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  tag     Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([storyId, tagId])
+}
+
+model SavedStory {
+  userId  String
+  storyId String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  story   Story  @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+  @@id([userId, storyId])
+}
+
+model Comment {
+  id        String    @id @default(cuid())
+  storyId   String
+  story     Story     @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  body      String
+  color     String    @default("cream")
+  posX      Float     @default(0)
+  posY      Float     @default(0)
+  rotation  Float     @default(0)
+  hidden    Boolean   @default(false)
+  featured  Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  replies   CommentReply[]
+  reactions Reaction[]
+  reports   Report[]
+}
+
+model CommentReply {
+  id        String   @id @default(cuid())
+  commentId String
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  body      String
+  hidden    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Discussion {
+  id          String           @id @default(cuid())
+  slug        String           @unique
+  title       String
+  prompt      String
+  topic       DiscussionTopic  @default(GENERAL)
+  tags        String           @default("[]")
+  locked      Boolean          @default(false)
+  isDebate    Boolean          @default(false)
+  featured    Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  creatorId   String
+  creator     User             @relation("DiscussionCreator", fields: [creatorId], references: [id])
+  posts       DiscussionPost[]
+  votes       DiscussionVote[]
+  arguments   DebateArgument[]
+  reactions   Reaction[]
+}
+
+model DiscussionVote {
+  id           String     @id @default(cuid())
+  discussionId String
+  discussion   Discussion @relation(fields: [discussionId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  choice       String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@unique([discussionId, userId])
+}
+
+model DiscussionPost {
+  id            String     @id @default(cuid())
+  discussionId  String
+  discussion    Discussion @relation(fields: [discussionId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  body          String
+  stance        String?
+  hidden        Boolean    @default(false)
+  featured      Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+  reactions     Reaction[]
+  reports       Report[]
+}
+
+model DebateArgument {
+  id            String     @id @default(cuid())
+  discussionId  String
+  discussion    Discussion @relation(fields: [discussionId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  side          String
+  body          String
+  hidden        Boolean    @default(false)
+  featured      Boolean    @default(false)
+  parentId      String?
+  parent        DebateArgument?  @relation("ArgumentThread", fields: [parentId], references: [id])
+  replies       DebateArgument[] @relation("ArgumentThread")
+  createdAt     DateTime   @default(now())
+  reactions     Reaction[]
+  reports       Report[]
+}
+
+model Reaction {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type       String
+  commentId  String?
+  comment    Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  postId     String?
+  post       DiscussionPost? @relation(fields: [postId], references: [id], onDelete: Cascade)
+  argumentId String?
+  argument   DebateArgument? @relation(fields: [argumentId], references: [id], onDelete: Cascade)
+  discussionId String?
+  discussion Discussion? @relation(fields: [discussionId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, type, commentId])
+  @@unique([userId, type, postId])
+  @@unique([userId, type, argumentId])
+}
+
+model IdeaSubmission {
+  id        String           @id @default(cuid())
+  name      String
+  email     String?
+  anonymous Boolean          @default(false)
+  topic     String
+  category  String
+  idea      String
+  why       String
+  links     String?
+  status    SubmissionStatus @default(SUBMITTED)
+  notes     String?
+  createdAt DateTime         @default(now())
+  userId    String?
+  user      User?            @relation(fields: [userId], references: [id])
+}
+
+model ArticleSubmission {
+  id               String           @id @default(cuid())
+  name             String
+  email            String
+  title            String
+  articleType      String
+  topic            String
+  pitch            String
+  draft            String
+  sources          String?
+  bio              String
+  bylinePreference String           @default("named")
+  status           SubmissionStatus @default(SUBMITTED)
+  notes            String?
+  createdAt        DateTime         @default(now())
+  userId           String?
+  user             User?            @relation(fields: [userId], references: [id])
+}
+
+model Opportunity {
+  id          String             @id @default(cuid())
+  slug        String             @unique
+  title       String
+  type        OpportunityType
+  description String
+  body        String
+  dateLabel   String?
+  location    String?
+  organizer   String
+  deadline    DateTime?
+  eligibility String?
+  status      OpportunityStatus  @default(OPEN)
+  ctaLabel    String
+  ctaHref     String?
+  urgent      Boolean            @default(false)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+}
+
+model Report {
+  id         String       @id @default(cuid())
+  reporterId String
+  reporter   User         @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+  reason     String
+  detail     String?
+  status     ReportStatus @default(OPEN)
+  commentId  String?
+  comment    Comment?     @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  postId     String?
+  post       DiscussionPost? @relation(fields: [postId], references: [id], onDelete: Cascade)
+  argumentId String?
+  argument   DebateArgument? @relation(fields: [argumentId], references: [id], onDelete: Cascade)
+  createdAt  DateTime     @default(now())
+}
