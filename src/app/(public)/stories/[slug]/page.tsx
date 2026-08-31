@@ -65,7 +65,7 @@ export default async function StoryPage({
       <div className="mx-auto mt-12 max-w-2xl px-4 sm:px-6">
         <ArticleBody raw={story.body} />
       </div>
-      <div className="mx-auto max-w-3xl px-4 sm:px-6">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <StickyDiscussion storyId={story.id} notes={comments} userId={user?.id} />
         {related.length > 0 && (
           <section className="mt-16">

@@ -145,7 +145,7 @@ export function StickyDiscussion({
 
       {view === "canvas" ? (
         <div
-          className="note-board relative mt-8 h-[min(70vh,40rem)] min-h-[28rem] overflow-auto rounded-[1.6rem] border border-dashed border-line"
+          className="note-board relative mt-8 h-[32rem] overflow-hidden rounded-[1.6rem] border border-dashed border-line sm:h-[36rem]"
           onClick={(event) => {
             if (!userId) return;
             if ((event.target as HTMLElement).closest("[data-note]")) return;
@@ -159,10 +159,10 @@ export function StickyDiscussion({
             <article
               key={note.id}
               data-note
-              className={`note note-${note.color} absolute z-10 w-[min(13.75rem,calc(100%-1rem))] p-3 text-sm`}
+              className={`note note-${note.color} absolute z-10 w-[min(14rem,calc(100%-1.25rem))] p-3 text-sm`}
               style={{
-                left: `min(${clamp(note.posX, 2, 72)}%, calc(100% - 14.25rem))`,
-                top: `min(${clamp(note.posY, 2, 68)}%, calc(100% - 8.5rem))`,
+                left: `clamp(0.75rem, ${clamp(note.posX, 3, 70)}%, calc(100% - 15rem))`,
+                top: `clamp(0.75rem, ${clamp(note.posY, 4, 52)}%, calc(100% - 11rem))`,
                 transform: `rotate(${note.rotation}deg)`,
               }}
             >
@@ -217,7 +217,7 @@ function NoteInner({ note, userId, compact }: { note: Note; userId?: string; com
         </p>
         <time className="text-[11px] opacity-70">{formatRelative(note.createdAt)}</time>
       </div>
-      <p className="mt-2 leading-5">{note.body}</p>
+      <p className={`mt-2 leading-5 ${compact ? "line-clamp-5" : ""}`}>{note.body}</p>
       <div className={`mt-3 flex flex-wrap items-center gap-2 text-xs ${compact ? "opacity-90" : ""}`}>
         <button type="button" onClick={() => reactToComment(note.id, "agree")} className="rounded-full bg-black/10 px-2 py-1">
           Agree {agrees}
@@ -237,14 +237,18 @@ function NoteInner({ note, userId, compact }: { note: Note; userId?: string; com
         )}
       </div>
       {note.replies.length > 0 && (
-        <ul className="mt-3 space-y-2 border-t border-black/10 pt-2">
-          {note.replies.map((item) => (
-            <li key={item.id} className="text-xs leading-5">
-              <span className="font-medium">{item.user.name}: </span>
-              {item.body}
-            </li>
-          ))}
-        </ul>
+        compact ? (
+          <p className="mt-2 text-[11px] opacity-70">{note.replies.length} {note.replies.length === 1 ? "reply" : "replies"}</p>
+        ) : (
+          <ul className="mt-3 space-y-2 border-t border-black/10 pt-2">
+            {note.replies.map((item) => (
+              <li key={item.id} className="text-xs leading-5">
+                <span className="font-medium">{item.user.name}: </span>
+                {item.body}
+              </li>
+            ))}
+          </ul>
+        )
       )}
       {open && (
         <form
