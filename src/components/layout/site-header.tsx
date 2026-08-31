@@ -10,7 +10,7 @@ import type { SessionUser } from "@/lib/session-types";
 import { isEditorial } from "@/lib/permissions";
 
 const NAV = [
-  { href: "/stories", label: "Stories" },
+  { href: "/read", label: "Read" },
   { href: "/discuss", label: "Discuss" },
   { href: "/involve", label: "Get Involved" },
   { href: "/submit", label: "Submit" },
@@ -48,7 +48,10 @@ export function SiteHeader({ user }: { user: SessionUser | null }) {
           <Wordmark stacked={false} />
           <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">
             {NAV.map((item) => {
-              const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+              const active =
+                pathname === item.href ||
+                pathname.startsWith(`${item.href}/`) ||
+                (item.href === "/read" && pathname.startsWith("/stories"));
               return (
                 <Link
                   key={item.href}
@@ -87,7 +90,7 @@ export function MobileNav() {
   const pathname = usePathname();
   const items = [
     { href: "/", label: "Home", icon: HomeIcon },
-    { href: "/stories", label: "Stories", icon: StoriesIcon },
+    { href: "/read", label: "Read", icon: StoriesIcon },
     { href: "/discuss", label: "Discuss", icon: DiscussIcon },
     { href: "/involve", label: "Involve", icon: InvolveIcon },
   ];
@@ -97,7 +100,10 @@ export function MobileNav() {
       aria-label="Mobile"
     >
       {items.map((item) => {
-        const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+        const active =
+          item.href === "/"
+            ? pathname === "/"
+            : pathname.startsWith(item.href) || (item.href === "/read" && pathname.startsWith("/stories"));
         const Icon = item.icon;
         return (
           <Link

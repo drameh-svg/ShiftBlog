@@ -97,7 +97,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div>
-            <h2 className="text-[11px] uppercase tracking-[0.18em] text-faint">Opinion</h2>
+            <h2 className="text-[11px] uppercase tracking-[0.18em] text-faint">Op-eds</h2>
             <div className="mt-4 space-y-4">
               {(opinion[0] ? opinion : rest.slice(4, 6)).slice(0, 2).map((story) => (
                 <TextStory key={story.id} story={story} />
@@ -109,7 +109,7 @@ export default async function HomePage() {
         <section className="py-6">
           <div className="flex items-end justify-between">
             <h2 className="display text-3xl">The Brief</h2>
-            <Link href="/stories?category=NEWS" className="text-sm text-purple">
+            <Link href="/read?category=NEWS" className="text-sm text-purple">
               See What’s Happening at USC →
             </Link>
           </div>

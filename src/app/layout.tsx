@@ -28,7 +28,13 @@ export const metadata: Metadata = {
   description:
     "A USC student-led publication on technology, artificial intelligence, ethics, and public policy. Read, discuss, contribute, and act.",
   metadataBase: new URL("https://shiftpolicy.usc.edu"),
-  icons: { icon: "/favicon.svg" },
+  icons: {
+    icon: [
+      { url: "/favicon.png", type: "image/png" },
+      { url: "/shift-logo.png", type: "image/png" },
+    ],
+    apple: "/shift-logo.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -70,8 +70,8 @@ export function slugify(value: string) {
 }
 
 export const CATEGORY_LABELS: Record<string, string> = {
-  NEWS: "News",
-  OPINION: "Opinion",
+  NEWS: "Latest news",
+  OPINION: "Op-eds",
   ANALYSIS: "Analysis",
   EXPLAINER: "The Brief",
   CAMPUS: "Campus",
@@ -79,6 +79,12 @@ export const CATEGORY_LABELS: Record<string, string> = {
   RESEARCH: "Research",
   ESSAY: "Essay",
 };
+
+export const READ_FILTERS: { label: string; category: "CAMPUS" | "NEWS" | "OPINION" }[] = [
+  { label: "Campus", category: "CAMPUS" },
+  { label: "Latest news", category: "NEWS" },
+  { label: "Op-eds", category: "OPINION" },
+];
 
 export const TAGS = [
   "AI",

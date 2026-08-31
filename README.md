@@ -58,7 +58,8 @@ A public account can read, comment, discuss, and submit. It **cannot** open `/ed
 ## Routes
 
 - `/` homepage
-- `/stories` and `/stories/[slug]`
+- `/read` article index (Campus, Latest news, Op-eds)
+- `/stories/[slug]` individual articles
 - `/discuss` and debate threads
 - `/involve` opportunities
 - `/submit` ideas and writing

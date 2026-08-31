@@ -1037,6 +1037,51 @@ async function main() {
     },
   });
 
+  const lorem =
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+  const loremBody = serializeBody([
+    { type: "p", text: lorem },
+    { type: "p", text: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." },
+    { type: "h2", text: "Lorem ipsum" },
+    { type: "p", text: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo." },
+    { type: "pullquote", text: "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit." },
+    { type: "p", text: "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem." },
+    { type: "ul", items: ["Lorem ipsum dolor sit amet", "Consectetur adipiscing elit", "Sed do eiusmod tempor incididunt"] },
+    { type: "p", text: "Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur." },
+  ]);
+  const loremTitles = [
+    "Lorem ipsum dolor sit amet",
+    "Consectetur adipiscing elit",
+    "Sed do eiusmod tempor incididunt",
+    "Ut labore et dolore magna aliqua",
+    "Ut enim ad minim veniam",
+    "Quis nostrud exercitation ullamco",
+    "Duis aute irure dolor in reprehenderit",
+    "Excepteur sint occaecat cupidatat",
+    "Sunt in culpa qui officia",
+    "Nemo enim ipsam voluptatem",
+    "Neque porro quisquam est",
+    "At vero eos et accusamus",
+  ];
+  const publicCategories = ["CAMPUS", "NEWS", "OPINION"] as const;
+  const seededStories = await prisma.story.findMany({ orderBy: { createdAt: "asc" } });
+  await Promise.all(
+    seededStories.map((story, index) =>
+      prisma.story.update({
+        where: { id: story.id },
+        data: {
+          title: loremTitles[index % loremTitles.length],
+          subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+          dek: lorem,
+          excerpt: lorem,
+          body: loremBody,
+          seoDescription: lorem,
+          category: publicCategories[index % publicCategories.length],
+        },
+      }),
+    ),
+  );
+
   console.log("Seeded SHIFT Public Policy.");
 }
 

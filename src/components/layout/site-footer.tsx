@@ -14,7 +14,7 @@ export function SiteFooter() {
         <div>
           <p className="text-[11px] uppercase tracking-[0.16em] text-faint">Read</p>
           <ul className="mt-3 space-y-2 text-sm">
-            <li><Link href="/stories" className="hover:text-purple">Stories</Link></li>
+            <li><Link href="/read" className="hover:text-purple">Read</Link></li>
             <li><Link href="/discuss" className="hover:text-purple">Discuss</Link></li>
             <li><Link href="/involve" className="hover:text-purple">Get Involved</Link></li>
           </ul>
