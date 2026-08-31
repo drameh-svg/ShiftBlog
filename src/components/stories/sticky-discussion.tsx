@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { formatRelative, initials } from "@/lib/format";
 import { NOTE_COLORS } from "@/lib/content";
 import { addComment, addCommentReply, reactToComment, reportComment } from "@/app/actions/discussion";
@@ -32,6 +33,7 @@ export function StickyDiscussion({
   notes: Note[];
   userId?: string;
 }) {
+  const router = useRouter();
   const [view, setView] = useState<"canvas" | "list">("canvas");
   const [body, setBody] = useState("");
   const [color, setColor] = useState<(typeof NOTE_COLORS)[number]>("cream");
@@ -61,6 +63,7 @@ export function StickyDiscussion({
     else {
       setBody("");
       setPlace(null);
+      router.refresh();
     }
   }
 

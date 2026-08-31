@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { addDiscussionPost, castDiscussionVote } from "@/app/actions/discussion";
 import { STANCE_LABELS, isStance, type Stance } from "@/lib/content";
 import { formatRelative, initials } from "@/lib/format";
@@ -42,8 +43,10 @@ export function ChannelChat({
   counts: StanceCounts;
   messages: ChatMessage[];
 }) {
+  const router = useRouter();
   const [body, setBody] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
   const [changing, setChanging] = useState(!userStance);
   const scroller = useRef<HTMLDivElement>(null);
   const total = counts.FOR + counts.AGAINST + counts.UNSURE;
@@ -69,16 +72,36 @@ export function ChannelChat({
 
   async function vote(choice: Stance) {
     setError(null);
-    const result = await castDiscussionVote(discussionId, choice);
-    if (result.error) setError(result.error);
-    else setChanging(false);
+    setPending(true);
+    try {
+      const result = await castDiscussionVote(discussionId, choice);
+      if (result.error) setError(result.error);
+      else {
+        setChanging(false);
+        router.refresh();
+      }
+    } catch {
+      setError("Could not save your stance. Try again.");
+    } finally {
+      setPending(false);
+    }
   }
 
   async function send() {
     setError(null);
-    const result = await addDiscussionPost(discussionId, body);
-    if (result.error) setError(result.error);
-    else setBody("");
+    setPending(true);
+    try {
+      const result = await addDiscussionPost(discussionId, body);
+      if (result.error) setError(result.error);
+      else {
+        setBody("");
+        router.refresh();
+      }
+    } catch {
+      setError("Could not send that message. Try again.");
+    } finally {
+      setPending(false);
+    }
   }
 
   return (
@@ -163,6 +186,7 @@ export function ChannelChat({
                   key={choice}
                   type="button"
                   onClick={() => vote(choice)}
+                  disabled={pending}
                   className={`rounded-full px-3 py-1.5 text-sm ${
                     userStance === choice ? "bg-fg text-bg" : "border border-line"
                   }`}
@@ -202,7 +226,7 @@ export function ChannelChat({
                   }
                 }}
               />
-              <button type="submit" className="rounded-full bg-fg px-4 py-2 text-sm text-bg">
+              <button type="submit" disabled={pending || !body.trim()} className="rounded-full bg-fg px-4 py-2 text-sm text-bg disabled:opacity-50">
                 Send
               </button>
             </div>

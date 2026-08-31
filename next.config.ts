@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ["@prisma/client", "bcryptjs"],
-  allowedDevOrigins: ["*.agent.cvm.dev"],
+  allowedDevOrigins: ["127.0.0.1", "localhost", "*.agent.cvm.dev"],
 };
 
 export default nextConfig;
