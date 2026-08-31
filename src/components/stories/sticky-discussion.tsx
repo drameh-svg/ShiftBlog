@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { formatRelative, initials } from "@/lib/format";
 import { NOTE_COLORS } from "@/lib/content";
 import { addComment, addCommentReply, reactToComment, reportComment } from "@/app/actions/discussion";
@@ -19,6 +19,10 @@ type Note = {
   reactions: { type: string; userId: string }[];
 };
 
+function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value));
+}
+
 export function StickyDiscussion({
   storyId,
   notes,
@@ -28,18 +32,36 @@ export function StickyDiscussion({
   notes: Note[];
   userId?: string;
 }) {
-  const [view, setView] = useState<"canvas" | "list">("list");
+  const [view, setView] = useState<"canvas" | "list">("canvas");
   const [body, setBody] = useState("");
   const [color, setColor] = useState<(typeof NOTE_COLORS)[number]>("cream");
   const [error, setError] = useState<string | null>(null);
+  const [place, setPlace] = useState<{ x: number; y: number } | null>(null);
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 639px)");
+    const sync = () => setView(media.matches ? "list" : "canvas");
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
 
   const visible = useMemo(() => notes, [notes]);
 
   async function submit() {
     setError(null);
-    const result = await addComment({ storyId, body, color });
+    const result = await addComment({
+      storyId,
+      body,
+      color,
+      posX: place?.x,
+      posY: place?.y,
+    });
     if (result.error) setError(result.error);
-    else setBody("");
+    else {
+      setBody("");
+      setPlace(null);
+    }
   }
 
   return (
@@ -49,7 +71,7 @@ export function StickyDiscussion({
           <p className="text-[11px] uppercase tracking-[0.18em] text-lime">Discussion</p>
           <h2 className="display mt-2 text-4xl">What do you think?</h2>
           <p className="mt-2 max-w-xl text-sm text-muted">
-            Leave a note. Canvas view is a shared board; list view is the accessible feed.
+            Leave a note on the shared board. Switch to list view if you want a linear feed.
           </p>
         </div>
         <div className="glass inline-flex rounded-full p-1" role="tablist" aria-label="Discussion view">
@@ -57,7 +79,7 @@ export function StickyDiscussion({
             type="button"
             role="tab"
             aria-selected={view === "canvas"}
-            className={`hidden rounded-full px-3 py-1.5 text-sm sm:inline ${view === "canvas" ? "bg-fg text-bg" : ""}`}
+            className={`rounded-full px-3 py-1.5 text-sm ${view === "canvas" ? "bg-fg text-bg" : ""}`}
             onClick={() => setView("canvas")}
           >
             Canvas View
@@ -103,6 +125,13 @@ export function StickyDiscussion({
               Post note
             </button>
           </div>
+          {view === "canvas" && (
+            <p className="mt-2 text-xs text-faint">
+              {place
+                ? "Note will land where you clicked the board."
+                : "Click the board to place your note, or we will pick a spot."}
+            </p>
+          )}
           {error && <p className="mt-2 text-sm text-danger">{error}</p>}
         </div>
       ) : (
@@ -115,32 +144,55 @@ export function StickyDiscussion({
       )}
 
       {view === "canvas" ? (
-        <div className="relative mt-8 hidden min-h-[420px] overflow-hidden rounded-[1.6rem] border border-dashed border-line bg-bg-elevated/50 sm:block">
+        <div
+          className="note-board relative mt-8 h-[min(70vh,40rem)] min-h-[28rem] overflow-auto rounded-[1.6rem] border border-dashed border-line"
+          onClick={(event) => {
+            if (!userId) return;
+            if ((event.target as HTMLElement).closest("[data-note]")) return;
+            const rect = event.currentTarget.getBoundingClientRect();
+            const x = ((event.clientX - rect.left) / rect.width) * 100;
+            const y = ((event.clientY - rect.top) / rect.height) * 100;
+            setPlace({ x: clamp(x, 2, 72), y: clamp(y, 2, 68) });
+          }}
+        >
           {visible.map((note) => (
             <article
               key={note.id}
-              className={`note note-${note.color} absolute w-[220px] p-3 text-sm`}
+              data-note
+              className={`note note-${note.color} absolute z-10 w-[min(13.75rem,calc(100%-1rem))] p-3 text-sm`}
               style={{
-                left: `${note.posX}%`,
-                top: `${note.posY}%`,
+                left: `min(${clamp(note.posX, 2, 72)}%, calc(100% - 14.25rem))`,
+                top: `min(${clamp(note.posY, 2, 68)}%, calc(100% - 8.5rem))`,
                 transform: `rotate(${note.rotation}deg)`,
               }}
             >
               <NoteInner note={note} userId={userId} compact />
             </article>
           ))}
+          {place && (
+            <div
+              aria-hidden
+              className={`note note-${color} pointer-events-none absolute z-20 w-[min(13.75rem,calc(100%-1rem))] p-3 text-sm opacity-70`}
+              style={{
+                left: `min(${place.x}%, calc(100% - 14.25rem))`,
+                top: `min(${place.y}%, calc(100% - 8.5rem))`,
+              }}
+            >
+              New note
+            </div>
+          )}
         </div>
-      ) : null}
-
-      <ol className={`mt-8 space-y-4 ${view === "canvas" ? "sm:hidden" : ""}`}>
-        {visible.map((note) => (
-          <li key={note.id}>
-            <article className={`note note-${note.color} p-4`}>
-              <NoteInner note={note} userId={userId} />
-            </article>
-          </li>
-        ))}
-      </ol>
+      ) : (
+        <ol className="mt-8 space-y-4">
+          {visible.map((note) => (
+            <li key={note.id}>
+              <article className={`note note-${note.color} p-4`}>
+                <NoteInner note={note} userId={userId} />
+              </article>
+            </li>
+          ))}
+        </ol>
+      )}
     </section>
   );
 }
@@ -166,27 +218,25 @@ function NoteInner({ note, userId, compact }: { note: Note; userId?: string; com
         <time className="text-[11px] opacity-70">{formatRelative(note.createdAt)}</time>
       </div>
       <p className="mt-2 leading-5">{note.body}</p>
-      {!compact && (
-        <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
-          <button type="button" onClick={() => reactToComment(note.id, "agree")} className="rounded-full bg-black/10 px-2 py-1">
-            Agree {agrees}
+      <div className={`mt-3 flex flex-wrap items-center gap-2 text-xs ${compact ? "opacity-90" : ""}`}>
+        <button type="button" onClick={() => reactToComment(note.id, "agree")} className="rounded-full bg-black/10 px-2 py-1">
+          Agree {agrees}
+        </button>
+        <button type="button" onClick={() => reactToComment(note.id, "disagree")} className="rounded-full bg-black/10 px-2 py-1">
+          Disagree {disagrees}
+        </button>
+        {userId && (
+          <button type="button" onClick={() => setOpen((v) => !v)} className="rounded-full bg-black/10 px-2 py-1">
+            Reply
           </button>
-          <button type="button" onClick={() => reactToComment(note.id, "disagree")} className="rounded-full bg-black/10 px-2 py-1">
-            Disagree {disagrees}
+        )}
+        {userId && !compact && (
+          <button type="button" onClick={() => reportComment(note.id)} className="rounded-full bg-black/10 px-2 py-1">
+            Report
           </button>
-          {userId && (
-            <button type="button" onClick={() => setOpen((v) => !v)} className="rounded-full bg-black/10 px-2 py-1">
-              Reply
-            </button>
-          )}
-          {userId && (
-            <button type="button" onClick={() => reportComment(note.id)} className="rounded-full bg-black/10 px-2 py-1">
-              Report
-            </button>
-          )}
-        </div>
-      )}
-      {!compact && note.replies.length > 0 && (
+        )}
+      </div>
+      {note.replies.length > 0 && (
         <ul className="mt-3 space-y-2 border-t border-black/10 pt-2">
           {note.replies.map((item) => (
             <li key={item.id} className="text-xs leading-5">

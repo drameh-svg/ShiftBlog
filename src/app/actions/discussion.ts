@@ -4,9 +4,21 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser, requireEditorial } from "@/lib/auth";
-import { NOTE_COLORS } from "@/lib/content";
+import { DISCUSSION_TOPIC_ORDER, isStance, NOTE_COLORS, slugify, type Stance } from "@/lib/content";
+import type { DiscussionTopic } from "@prisma/client";
 
-export async function addComment(input: { storyId: string; body: string; color: string }) {
+function clampNotePos(value: number | undefined, min: number, max: number, fallback: number) {
+  if (typeof value !== "number" || Number.isNaN(value)) return fallback;
+  return Math.min(max, Math.max(min, value));
+}
+
+export async function addComment(input: {
+  storyId: string;
+  body: string;
+  color: string;
+  posX?: number;
+  posY?: number;
+}) {
   const user = await getCurrentUser();
   if (!user) return { error: "Sign in to comment." };
   const body = input.body.trim();
@@ -21,8 +33,8 @@ export async function addComment(input: { storyId: string; body: string; color: 
       userId: user.id,
       body,
       color,
-      posX: 8 + Math.random() * 62,
-      posY: 6 + Math.random() * 48,
+      posX: clampNotePos(input.posX, 2, 72, 6 + Math.random() * 58),
+      posY: clampNotePos(input.posY, 2, 68, 6 + Math.random() * 52),
       rotation: Math.random() * 6 - 3,
     },
   });
@@ -68,17 +80,63 @@ export async function reportComment(commentId: string) {
   return { ok: true };
 }
 
+export async function castDiscussionVote(discussionId: string, choice: Stance) {
+  const user = await getCurrentUser();
+  if (!user) return { error: "Sign in to take a stance." };
+  if (!isStance(choice)) return { error: "Choose For, Against, or Still thinking." };
+  const discussion = await prisma.discussion.findUnique({ where: { id: discussionId } });
+  if (!discussion || discussion.locked) return { error: "This discussion is closed." };
+  await prisma.discussionVote.upsert({
+    where: { discussionId_userId: { discussionId, userId: user.id } },
+    update: { choice },
+    create: { discussionId, userId: user.id, choice },
+  });
+  await prisma.discussion.update({ where: { id: discussionId }, data: { updatedAt: new Date() } });
+  revalidatePath("/discuss");
+  revalidatePath(`/discuss/${discussion.slug}`);
+  return { ok: true };
+}
+
 export async function addDiscussionPost(discussionId: string, body: string) {
   const user = await getCurrentUser();
   if (!user) return { error: "Sign in to join the discussion." };
   const text = body.trim();
-  if (text.length < 8) return { error: "Add a complete thought." };
+  if (text.length < 2) return { error: "Add a complete thought." };
+  if (text.length > 2000) return { error: "Keep messages under 2,000 characters." };
   const discussion = await prisma.discussion.findUnique({ where: { id: discussionId } });
   if (!discussion || discussion.locked) return { error: "This discussion is closed." };
-  await prisma.discussionPost.create({ data: { discussionId, userId: user.id, body: text } });
+  const vote = await prisma.discussionVote.findUnique({
+    where: { discussionId_userId: { discussionId, userId: user.id } },
+  });
+  if (!vote) return { error: "Pick a stance on this topic before you send a message." };
+  await prisma.discussionPost.create({
+    data: { discussionId, userId: user.id, body: text, stance: vote.choice },
+  });
   await prisma.discussion.update({ where: { id: discussionId }, data: { updatedAt: new Date() } });
+  revalidatePath("/discuss");
   revalidatePath(`/discuss/${discussion.slug}`);
   return { ok: true };
+}
+
+export async function startDiscussion(input: { title: string; prompt: string; topic: string }) {
+  const user = await getCurrentUser();
+  if (!user) return { error: "Sign in to start a topic." };
+  const title = input.title.trim();
+  const prompt = input.prompt.trim();
+  if (title.length < 8) return { error: "Give the topic a fuller title." };
+  if (prompt.length < 12) return { error: "Add a prompt so people know what they are answering." };
+  const topic = DISCUSSION_TOPIC_ORDER.includes(input.topic as (typeof DISCUSSION_TOPIC_ORDER)[number])
+    ? (input.topic as DiscussionTopic)
+    : "GENERAL";
+  let slug = slugify(title);
+  const clash = await prisma.discussion.findUnique({ where: { slug } });
+  if (clash) slug = `${slug}-${Math.random().toString(36).slice(2, 6)}`;
+  const discussion = await prisma.discussion.create({
+    data: { slug, title, prompt, topic, creatorId: user.id, isDebate: topic === "DEBATES" },
+  });
+  revalidatePath("/discuss");
+  revalidatePath(`/discuss/${discussion.slug}`);
+  return { ok: true, slug: discussion.slug };
 }
 
 export async function addDebateArgument(discussionId: string, side: "FOR" | "AGAINST", body: string) {
@@ -91,6 +149,7 @@ export async function addDebateArgument(discussionId: string, side: "FOR" | "AGA
   if (!discussion || !discussion.isDebate || discussion.locked) return { error: "Debate not found." };
   await prisma.debateArgument.create({ data: { discussionId, userId: user.id, side, body: text } });
   await prisma.discussion.update({ where: { id: discussionId }, data: { updatedAt: new Date() } });
+  revalidatePath("/discuss");
   revalidatePath(`/discuss/${discussion.slug}`);
   return { ok: true };
 }
@@ -127,6 +186,7 @@ export async function lockDiscussion(discussionId: string, locked: boolean) {
     where: { id: discussionId },
     data: { locked },
   });
+  revalidatePath("/discuss");
   revalidatePath(`/discuss/${discussion.slug}`);
   revalidatePath("/editor/discussions");
 }

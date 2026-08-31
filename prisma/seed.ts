@@ -23,6 +23,7 @@ async function main() {
   await prisma.comment.deleteMany();
   await prisma.debateArgument.deleteMany();
   await prisma.discussionPost.deleteMany();
+  await prisma.discussionVote.deleteMany();
   await prisma.discussion.deleteMany();
   await prisma.savedStory.deleteMany();
   await prisma.storyTag.deleteMany();
@@ -680,8 +681,8 @@ async function main() {
       userId: sam.id,
       body: "I have never been asked about any of this, and I am in two CS classes that already require AI tools. Representation should not be optional.",
       color: "lime",
-      posX: 8,
-      posY: 12,
+      posX: 6,
+      posY: 10,
       rotation: -2.5,
     },
     {
@@ -690,7 +691,7 @@ async function main() {
       body: "Listening sessions are not power. If there is no vote, there is no seat.",
       color: "purple",
       posX: 38,
-      posY: 6,
+      posY: 38,
       rotation: 1.8,
     },
     {
@@ -698,8 +699,8 @@ async function main() {
       userId: devon.id,
       body: "Would a student seat slow things down? Maybe. Slowing down a surveillance purchase is not a bug.",
       color: "cream",
-      posX: 64,
-      posY: 18,
+      posX: 12,
+      posY: 56,
       rotation: -1.2,
       featured: true,
     },
@@ -708,8 +709,8 @@ async function main() {
       userId: sam.id,
       body: "I do not want a ban. I want to know, in the first week, what counts as using my own brain.",
       color: "lavender",
-      posX: 14,
-      posY: 10,
+      posX: 10,
+      posY: 14,
       rotation: 2.1,
     },
     {
@@ -717,8 +718,8 @@ async function main() {
       userId: nina.id,
       body: "If facial recognition comes to campus, I want a public no. Not a FAQ after installation.",
       color: "gray",
-      posX: 42,
-      posY: 14,
+      posX: 36,
+      posY: 42,
       rotation: -3,
     },
   ];
@@ -842,7 +843,7 @@ async function main() {
       creatorId: nina.id,
     },
   });
-  await prisma.discussion.create({
+  const agent = await prisma.discussion.create({
     data: {
       slug: "agent-tools-and-integrity",
       title: "If an AI agent files my paperwork, did I do the work?",
@@ -858,24 +859,98 @@ async function main() {
       {
         discussionId: contracts.id,
         userId: sam.id,
+        stance: "FOR",
         body: "Redact prices if you must. Do not redact the data-sharing clauses. That is the public interest part.",
         featured: true,
       },
       {
         discussionId: contracts.id,
         userId: nina.id,
+        stance: "FOR",
         body: "Other public universities already post contracts. USC’s private status should not be a secrecy technology.",
+      },
+      {
+        discussionId: contracts.id,
+        userId: leo.id,
+        stance: "UNSURE",
+        body: "I want the clauses, but I also want a process that does not dump 400-page PDFs on students and call that transparency.",
       },
       {
         discussionId: wifi.id,
         userId: devon.id,
+        stance: "FOR",
         body: "I just want to know whether my MAC address is being stitched to my student ID across semesters.",
+      },
+      {
+        discussionId: wifi.id,
+        userId: sam.id,
+        stance: "FOR",
+        body: "If login is required, publish the retention window. “Security” cannot be a blank check for a location history.",
+      },
+      {
+        discussionId: wifi.id,
+        userId: priya.id,
+        stance: "UNSURE",
+        body: "Some logging is real incident response. The line is whether they keep it after the semester ends.",
       },
       {
         discussionId: lectureNotes.id,
         userId: aisha.id,
+        stance: "FOR",
         body: "If a vendor trains on lecture captures, professors should know before they hit record — and students before they speak.",
       },
+      {
+        discussionId: lectureNotes.id,
+        userId: marcus.id,
+        stance: "AGAINST",
+        body: "Ownership gets messy fast. A cleaner rule: the notes are a study aid, not a second publication of the lecture.",
+      },
+      {
+        discussionId: agent.id,
+        userId: priya.id,
+        stance: "FOR",
+        body: "If I never read the form, I did not file it. The agent did. Integrity language should say that out loud.",
+      },
+      {
+        discussionId: agent.id,
+        userId: julia.id,
+        stance: "UNSURE",
+        body: "Depends on the task. Booking a room is not the same as submitting an honors thesis appendix.",
+      },
+      {
+        discussionId: facial.id,
+        userId: nina.id,
+        stance: "FOR",
+        body: "The board can keep arguing edges. I still want a default no unless students vote otherwise.",
+      },
+      {
+        discussionId: exams.id,
+        userId: aisha.id,
+        stance: "AGAINST",
+        body: "A ban that students can route around is just a honesty tax on the people who follow the rule.",
+      },
+    ],
+  });
+
+  await prisma.discussionVote.createMany({
+    data: [
+      { discussionId: facial.id, userId: nina.id, choice: "FOR" },
+      { discussionId: facial.id, userId: devon.id, choice: "FOR" },
+      { discussionId: facial.id, userId: sam.id, choice: "AGAINST" },
+      { discussionId: facial.id, userId: leo.id, choice: "AGAINST" },
+      { discussionId: exams.id, userId: julia.id, choice: "FOR" },
+      { discussionId: exams.id, userId: sam.id, choice: "AGAINST" },
+      { discussionId: exams.id, userId: aisha.id, choice: "AGAINST" },
+      { discussionId: lectureNotes.id, userId: aisha.id, choice: "FOR" },
+      { discussionId: lectureNotes.id, userId: marcus.id, choice: "AGAINST" },
+      { discussionId: contracts.id, userId: sam.id, choice: "FOR" },
+      { discussionId: contracts.id, userId: nina.id, choice: "FOR" },
+      { discussionId: contracts.id, userId: leo.id, choice: "UNSURE" },
+      { discussionId: wifi.id, userId: devon.id, choice: "FOR" },
+      { discussionId: wifi.id, userId: sam.id, choice: "FOR" },
+      { discussionId: wifi.id, userId: priya.id, choice: "UNSURE" },
+      { discussionId: agent.id, userId: priya.id, choice: "FOR" },
+      { discussionId: agent.id, userId: julia.id, choice: "UNSURE" },
     ],
   });
 

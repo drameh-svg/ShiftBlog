@@ -1,7 +1,13 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Wordmark } from "./wordmark";
 
 export function SiteFooter() {
+  const pathname = usePathname();
+  if (pathname.startsWith("/discuss")) return null;
+
   return (
     <footer className="mt-24 border-t border-line pb-28 md:pb-10">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr]">

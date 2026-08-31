@@ -113,6 +113,30 @@ export const VISUAL_THEMES = [
 
 export const NOTE_COLORS = ["lime", "purple", "lavender", "cream", "gray"] as const;
 
+export const STANCES = ["FOR", "AGAINST", "UNSURE"] as const;
+export type Stance = (typeof STANCES)[number];
+
+export const STANCE_LABELS: Record<Stance, string> = {
+  FOR: "For",
+  AGAINST: "Against",
+  UNSURE: "Still thinking",
+};
+
+export const DISCUSSION_TOPIC_LABELS: Record<string, string> = {
+  TRENDING: "Trending",
+  CAMPUS: "Campus",
+  AI: "AI",
+  POLICY: "Policy",
+  DEBATES: "Debates",
+  GENERAL: "General",
+};
+
+export const DISCUSSION_TOPIC_ORDER = ["TRENDING", "CAMPUS", "AI", "POLICY", "DEBATES", "GENERAL"] as const;
+
+export function isStance(value: string | null | undefined): value is Stance {
+  return STANCES.includes(value as Stance);
+}
+
 export const STORY_STATUSES = ["DRAFT", "IN_REVIEW", "SCHEDULED", "PUBLISHED", "ARCHIVED"] as const;
 export const SUBMISSION_STATUSES = [
   "SUBMITTED",

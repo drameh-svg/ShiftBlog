@@ -194,6 +194,21 @@ body {
     0 1px 0 rgba(255, 255, 255, 0.4) inset;
 }
 
+.note-board {
+  background-color: color-mix(in srgb, var(--bg-elevated) 86%, var(--purple) 14%);
+  background-image:
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--fg) 10%, transparent) 1px, transparent 0);
+  background-size: 22px 22px;
+}
+
+.discuss-sidebar {
+  background: color-mix(in srgb, var(--bg-elevated) 88%, var(--purple) 12%);
+}
+
+.discuss-composer {
+  background: color-mix(in srgb, var(--bg) 92%, var(--bg-elevated));
+}
+
 .note-lime {
   background: #d7f56a;
   color: #1a2208;

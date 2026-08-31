@@ -88,6 +88,7 @@ model User {
   comments            Comment[]
   commentReplies      CommentReply[]
   discussionPosts     DiscussionPost[]
+  discussionVotes     DiscussionVote[]
   discussionsCreated  Discussion[]      @relation("DiscussionCreator")
   debateArguments     DebateArgument[]
   reactions           Reaction[]
@@ -196,8 +197,22 @@ model Discussion {
   creatorId   String
   creator     User             @relation("DiscussionCreator", fields: [creatorId], references: [id])
   posts       DiscussionPost[]
+  votes       DiscussionVote[]
   arguments   DebateArgument[]
   reactions   Reaction[]
+}
+
+model DiscussionVote {
+  id           String     @id @default(cuid())
+  discussionId String
+  discussion   Discussion @relation(fields: [discussionId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  choice       String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@unique([discussionId, userId])
 }
 
 model DiscussionPost {
@@ -207,6 +222,7 @@ model DiscussionPost {
   userId        String
   user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   body          String
+  stance        String?
   hidden        Boolean    @default(false)
   featured      Boolean    @default(false)
   createdAt     DateTime   @default(now())

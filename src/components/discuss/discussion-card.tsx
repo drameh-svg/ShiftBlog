@@ -16,7 +16,7 @@ export type DiscussionCardData = {
 
 export function DiscussionCard({ discussion }: { discussion: DiscussionCardData }) {
   const tags = safeTags(discussion.tags);
-  const responses = discussion.isDebate ? discussion._count.arguments : discussion._count.posts;
+  const responses = discussion._count.posts + discussion._count.arguments;
   return (
     <Link
       href={`/discuss/${discussion.slug}`}
