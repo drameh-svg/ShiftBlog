@@ -10,7 +10,7 @@ Readers post on stories and discussions anonymously. No public account is requir
 
 - Next.js 16 (App Router) + TypeScript
 - Tailwind CSS 4
-- Prisma + SQLite
+- Prisma + PostgreSQL (Neon in production)
 - Signed HTTP-only sessions (`jose`) for the editorial desk only
 
 ## Setup

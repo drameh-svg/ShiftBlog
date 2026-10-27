@@ -1,11 +1,18 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { SESSION_COOKIE, readSessionToken } from "@/lib/session-token";
+import { GUEST_COOKIE, guestCookieOptions, isGuestKey } from "@/lib/guest-cookie";
 import { isEditorial } from "@/lib/permissions";
 
 export async function proxy(request: NextRequest) {
+  const response = NextResponse.next();
+  const guest = request.cookies.get(GUEST_COOKIE)?.value;
+  if (!isGuestKey(guest)) {
+    response.cookies.set(GUEST_COOKIE, crypto.randomUUID(), guestCookieOptions());
+  }
+
   if (!request.nextUrl.pathname.startsWith("/editor")) {
-    return NextResponse.next();
+    return response;
   }
 
   const token = request.cookies.get(SESSION_COOKIE)?.value;
@@ -17,9 +24,9 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(signIn);
   }
 
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {
-  matcher: ["/editor/:path*"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:png|webp|svg|ico)$).*)"],
 };

@@ -1,8 +1,9 @@
 import { cookies } from "next/headers";
 import { prisma } from "./prisma";
 import { getCurrentUser, hashPassword } from "./auth";
+import { GUEST_COOKIE, guestCookieOptions, isGuestKey } from "./guest-cookie";
 
-export const GUEST_COOKIE = "shift_guest";
+export { GUEST_COOKIE } from "./guest-cookie";
 
 function guestEmail(key: string) {
   return `guest.${key}@shift.local`;
@@ -11,7 +12,7 @@ function guestEmail(key: string) {
 export async function readGuestKey() {
   const jar = await cookies();
   const value = jar.get(GUEST_COOKIE)?.value ?? "";
-  return /^[0-9a-f-]{36}$/i.test(value) ? value : null;
+  return isGuestKey(value) ? value : null;
 }
 
 export async function findGuestUser() {
@@ -36,13 +37,7 @@ export async function getGuestUser() {
   let key = await readGuestKey();
   if (!key) {
     key = crypto.randomUUID();
-    jar.set(GUEST_COOKIE, key, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.COOKIE_SECURE === "0" ? false : process.env.NODE_ENV === "production",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 365,
-    });
+    jar.set(GUEST_COOKIE, key, guestCookieOptions());
   }
   const email = guestEmail(key);
   const existing = await prisma.user.findUnique({

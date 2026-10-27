@@ -79,7 +79,7 @@ export async function reportComment(commentId: string) {
 
 export async function castDiscussionVote(discussionId: string, choice: Stance) {
   const user = await getActor();
-  if (!isStance(choice)) return { error: "Choose For, Against, or Still thinking." };
+  if (!isStance(choice)) return { error: "Choose Agree, Disagree, or Middle ground." };
   const discussion = await prisma.discussion.findUnique({ where: { id: discussionId } });
   if (!discussion || discussion.locked) return { error: "This discussion is closed." };
   await prisma.discussionVote.upsert({
@@ -93,24 +93,32 @@ export async function castDiscussionVote(discussionId: string, choice: Stance) {
   return { ok: true };
 }
 
-export async function addDiscussionPost(discussionId: string, body: string) {
+export async function addDiscussionPost(discussionId: string, body: string, stance?: Stance | null) {
   const user = await getActor();
   const text = body.trim();
   if (text.length < 2) return { error: "Add a complete thought." };
   if (text.length > 2000) return { error: "Keep messages under 2,000 characters." };
   const discussion = await prisma.discussion.findUnique({ where: { id: discussionId } });
   if (!discussion || discussion.locked) return { error: "This discussion is closed." };
-  const vote = await prisma.discussionVote.findUnique({
+  let vote = await prisma.discussionVote.findUnique({
     where: { discussionId_userId: { discussionId, userId: user.id } },
   });
-  if (!vote) return { error: "Pick a stance on this topic before you send a message." };
-  await prisma.discussionPost.create({
+  const chosen = isStance(stance) ? stance : isStance(vote?.choice) ? vote.choice : null;
+  if (!chosen) return { error: "Pick a stance on this topic before you send a message." };
+  if (!vote || vote.choice !== chosen) {
+    vote = await prisma.discussionVote.upsert({
+      where: { discussionId_userId: { discussionId, userId: user.id } },
+      update: { choice: chosen },
+      create: { discussionId, userId: user.id, choice: chosen },
+    });
+  }
+  const post = await prisma.discussionPost.create({
     data: { discussionId, userId: user.id, body: text, stance: vote.choice },
   });
   await prisma.discussion.update({ where: { id: discussionId }, data: { updatedAt: new Date() } });
   revalidatePath("/discuss");
   revalidatePath(`/discuss/${discussion.slug}`);
-  return { ok: true };
+  return { ok: true, id: post.id };
 }
 
 export async function startDiscussion(input: { title: string; prompt: string; topic: string }) {

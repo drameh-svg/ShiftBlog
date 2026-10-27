@@ -117,9 +117,9 @@ export const STANCES = ["FOR", "AGAINST", "UNSURE"] as const;
 export type Stance = (typeof STANCES)[number];
 
 export const STANCE_LABELS: Record<Stance, string> = {
-  FOR: "For",
-  AGAINST: "Against",
-  UNSURE: "Still thinking",
+  FOR: "Agree",
+  AGAINST: "Disagree",
+  UNSURE: "Middle ground",
 };
 
 export const DISCUSSION_TOPIC_LABELS: Record<string, string> = {

@@ -5,7 +5,7 @@ cd "$(dirname "$0")/.."
 if [ ! -f .env ]; then
   AUTH_SECRET="$(openssl rand -hex 32)"
   cat > .env <<EOF
-DATABASE_URL="file:./prod.db"
+DATABASE_URL="${DATABASE_URL:-}"
 AUTH_SECRET="${AUTH_SECRET}"
 SITE_URL="${SITE_URL:-http://localhost:3000}"
 EOF
@@ -15,6 +15,11 @@ set -a
 # shellcheck disable=SC1091
 source .env
 set +a
+
+if [ -z "${DATABASE_URL:-}" ]; then
+  echo "DATABASE_URL is required." >&2
+  exit 1
+fi
 
 npx prisma generate
 npx prisma db push

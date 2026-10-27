@@ -17,6 +17,12 @@ function daysFromNow(days: number) {
 }
 
 async function main() {
+  const alreadySeeded = await prisma.story.count();
+  if (alreadySeeded > 0) {
+    console.log("SHIFT content already present; skipping seed.");
+    return;
+  }
+
   await prisma.report.deleteMany();
   await prisma.reaction.deleteMany();
   await prisma.commentReply.deleteMany();
