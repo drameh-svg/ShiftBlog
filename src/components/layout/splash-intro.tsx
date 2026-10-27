@@ -2,42 +2,28 @@
 
 import { useEffect, useState } from "react";
 
-const STORAGE_KEY = "shift-splash-seen";
-
 export function SplashIntro() {
-  const [phase, setPhase] = useState<"play" | "exit" | "hidden">("play");
+  const [step, setStep] = useState<"spin" | "title" | "exit" | "hidden">("spin");
+  const [turns, setTurns] = useState(0);
 
   useEffect(() => {
-    try {
-      if (sessionStorage.getItem(STORAGE_KEY) === "1") {
-        setPhase("hidden");
-        return;
-      }
-    } catch {
-      // sessionStorage can be blocked; still play the intro.
-    }
-
-    const exitTimer = window.setTimeout(() => setPhase("exit"), 3200);
-    const hideTimer = window.setTimeout(() => {
-      try {
-        sessionStorage.setItem(STORAGE_KEY, "1");
-      } catch {
-        // ignore
-      }
-      setPhase("hidden");
-    }, 3800);
-
+    const start = window.requestAnimationFrame(() => setTurns(2));
+    const titleTimer = window.setTimeout(() => setStep("title"), 1900);
+    const exitTimer = window.setTimeout(() => setStep("exit"), 3200);
+    const hideTimer = window.setTimeout(() => setStep("hidden"), 3900);
     return () => {
+      window.cancelAnimationFrame(start);
+      window.clearTimeout(titleTimer);
       window.clearTimeout(exitTimer);
       window.clearTimeout(hideTimer);
     };
   }, []);
 
-  if (phase === "hidden") return null;
+  if (step === "hidden") return null;
 
   return (
     <div
-      className={`splash-overlay ${phase === "exit" ? "splash-overlay-exit" : ""}`}
+      className={`splash-overlay ${step === "exit" ? "splash-overlay-exit" : ""}`}
       role="presentation"
       aria-hidden
     >
@@ -48,8 +34,9 @@ export function SplashIntro() {
           width={128}
           height={128}
           className="splash-logo"
+          style={{ transform: `rotate(${turns * 360}deg) scale(1)` }}
         />
-        <p className="splash-title">public policy blog</p>
+        <p className={`splash-title ${step === "spin" ? "" : "splash-title-visible"}`}>public policy blog</p>
       </div>
     </div>
   );

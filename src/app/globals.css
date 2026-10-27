@@ -324,8 +324,8 @@ body {
   width: 7.5rem;
   height: 7.5rem;
   border-radius: 999px;
-  will-change: transform;
-  animation: splash-spin 1.8s cubic-bezier(0.22, 0.8, 0.28, 1) both;
+  transform: rotate(0deg) scale(0.86);
+  transition: transform 1.8s cubic-bezier(0.22, 0.8, 0.28, 1);
 }
 
 .splash-title {
@@ -335,32 +335,16 @@ body {
   letter-spacing: 0.04em;
   text-transform: lowercase;
   color: var(--muted);
-  animation: splash-title 700ms ease 1.85s both;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 600ms ease,
+    transform 600ms ease;
 }
 
-@keyframes splash-spin {
-  0% {
-    transform: rotate(0deg) scale(0.7);
-    opacity: 0;
-  }
-  12% {
-    opacity: 1;
-  }
-  100% {
-    transform: rotate(720deg) scale(1);
-    opacity: 1;
-  }
-}
-
-@keyframes splash-title {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.splash-title-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 @media (prefers-reduced-motion: reduce) {
