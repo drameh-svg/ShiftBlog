@@ -106,7 +106,6 @@ export function ChannelChat({
       if (previous !== choice) next[choice] += 1;
       return next;
     });
-    setPending(true);
     try {
       const result = await castDiscussionVote(discussionId, choice);
       if (result?.error) {
@@ -114,16 +113,12 @@ export function ChannelChat({
         setLocalStance(previous);
         setChanging(!previous);
         setLocalCounts(counts);
-        return;
       }
-      router.refresh();
     } catch {
       setError("Could not save your stance. Try again.");
       setLocalStance(previous);
       setChanging(!previous);
       setLocalCounts(counts);
-    } finally {
-      setPending(false);
     }
   }
 
