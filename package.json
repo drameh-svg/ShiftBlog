@@ -6,6 +6,7 @@
     "dev": "next dev --hostname 0.0.0.0 --port 3000",
     "build": "prisma generate && next build",
     "start": "next start --hostname 0.0.0.0 --port 3000",
+    "start:live": "bash scripts/start-live.sh",
     "lint": "eslint",
     "test": "tsx --test src/lib/permissions.test.ts",
     "db:push": "prisma db push",

@@ -162,7 +162,7 @@ export function DiscussShell({
             </button>
           )
         ) : (
-          <Link href="/sign-in" className="block text-center text-sm text-purple">
+          <Link href="/sign-in?next=/discuss" className="block text-center text-sm text-purple">
             Sign in to start a topic
           </Link>
         )}

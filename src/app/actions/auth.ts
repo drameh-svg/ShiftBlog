@@ -17,12 +17,18 @@ const credentials = z.object({
   password: z.string().min(8),
 });
 
+function safeNextPath(value: unknown) {
+  const next = String(value ?? "").trim();
+  if (!next.startsWith("/") || next.startsWith("//") || next.includes("\\")) return null;
+  return next;
+}
+
 async function setSessionCookie(token: string) {
   const jar = await cookies();
   jar.set(SESSION_COOKIE, token, {
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    secure: process.env.COOKIE_SECURE === "0" ? false : process.env.NODE_ENV === "production",
     path: "/",
     maxAge: 60 * 60 * 24 * 14,
   });
@@ -48,7 +54,8 @@ export async function signInAction(_: unknown, formData: FormData) {
     title: user.title,
   });
   await setSessionCookie(token);
-  redirect(user.role === "PUBLIC" ? "/" : "/editor");
+  const next = safeNextPath(formData.get("next"));
+  redirect(next ?? (user.role === "PUBLIC" ? "/" : "/editor"));
 }
 
 export async function signUpAction(_: unknown, formData: FormData) {

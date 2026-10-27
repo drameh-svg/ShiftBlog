@@ -171,7 +171,7 @@ export function ChannelChat({
           <p className="text-sm text-muted">This topic is locked.</p>
         ) : !userId ? (
           <p className="text-sm text-muted">
-            <a href="/sign-in" className="text-purple">
+            <a href="/sign-in?next=/discuss" className="text-purple">
               Sign in
             </a>{" "}
             to join this chat.

@@ -27,6 +27,10 @@ export default async function ReadPage({ searchParams }: { searchParams: Search 
         ))}
       </div>
 
+      {!lead && (
+        <p className="mt-12 max-w-xl text-muted">No published stories in this filter yet. Check back shortly, or browse another topic.</p>
+      )}
+
       {lead && (
         <div className="mt-10 grid gap-6 lg:grid-cols-[1.3fr_0.7fr]">
           <FeatureCard story={lead} />

@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   },
   description:
     "A USC student-led publication on technology, artificial intelligence, ethics, and public policy. Read, discuss, contribute, and act.",
-  metadataBase: new URL("https://shiftpolicy.usc.edu"),
+  metadataBase: new URL(process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   icons: {
     icon: [
       { url: "/favicon.png", type: "image/png" },

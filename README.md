@@ -41,7 +41,15 @@ npm run dev
 
 The site runs at [http://localhost:3000](http://localhost:3000) on your Mac.
 
-If you open a Cursor Cloud preview URL (`*.agent.cvm.dev`) and see **HTTP 502**, the app is not running in that cloud session. Refresh after the agent starts `npm run dev`, or use localhost on your machine instead.
+To run the production server (same machine, all interfaces):
+
+```bash
+npm run db:setup
+npm run build
+npm run start:live
+```
+
+If you open a Cursor Cloud preview URL (`*.agent.cvm.dev`) and see **HTTP 502**, the app is not running in that cloud session. Refresh after the agent starts the server, or use localhost on your machine instead.
 
 ## Demo accounts
 

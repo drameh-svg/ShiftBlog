@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export default async function ProfilePage() {
   const user = await getCurrentUser();
-  if (!user) redirect("/sign-in");
+  if (!user) redirect("/sign-in?next=/profile");
   const saved = await prisma.savedStory.findMany({
     where: { userId: user.id },
     include: {

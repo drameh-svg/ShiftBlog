@@ -139,7 +139,7 @@ export function StickyDiscussion({
         </div>
       ) : (
         <p className="mt-6 text-sm text-muted">
-          <a href="/sign-in" className="text-purple">
+          <a href="/sign-in?next=/read" className="text-purple">
             Sign in
           </a>{" "}
           to add a note to this story.
@@ -201,10 +201,16 @@ export function StickyDiscussion({
 }
 
 function NoteInner({ note, userId, compact }: { note: Note; userId?: string; compact?: boolean }) {
+  const router = useRouter();
   const agrees = note.reactions.filter((r) => r.type === "agree").length;
   const disagrees = note.reactions.filter((r) => r.type === "disagree").length;
   const [reply, setReply] = useState("");
   const [open, setOpen] = useState(false);
+
+  async function react(type: "agree" | "disagree") {
+    await reactToComment(note.id, type);
+    router.refresh();
+  }
 
   return (
     <div>
@@ -222,10 +228,10 @@ function NoteInner({ note, userId, compact }: { note: Note; userId?: string; com
       </div>
       <p className={`mt-2 leading-5 ${compact ? "line-clamp-5" : ""}`}>{note.body}</p>
       <div className={`mt-3 flex flex-wrap items-center gap-2 text-xs ${compact ? "opacity-90" : ""}`}>
-        <button type="button" onClick={() => reactToComment(note.id, "agree")} className="rounded-full bg-black/10 px-2 py-1">
+        <button type="button" onClick={() => react("agree")} className="rounded-full bg-black/10 px-2 py-1">
           Agree {agrees}
         </button>
-        <button type="button" onClick={() => reactToComment(note.id, "disagree")} className="rounded-full bg-black/10 px-2 py-1">
+        <button type="button" onClick={() => react("disagree")} className="rounded-full bg-black/10 px-2 py-1">
           Disagree {disagrees}
         </button>
         {userId && (
@@ -261,6 +267,7 @@ function NoteInner({ note, userId, compact }: { note: Note; userId?: string; com
             await addCommentReply(note.id, reply);
             setReply("");
             setOpen(false);
+            router.refresh();
           }}
         >
           <label className="visually-hidden" htmlFor={`reply-${note.id}`}>

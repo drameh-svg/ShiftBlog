@@ -47,7 +47,11 @@ export async function createStoryAction() {
 
 export async function saveStoryDraft(id: string, input: z.infer<typeof storySchema>) {
   const user = await requireEditorial();
-  const data = storySchema.parse(input);
+  const parsed = storySchema.safeParse(input);
+  if (!parsed.success) {
+    return { error: "Add a title and a short dek (at least a sentence) before saving." };
+  }
+  const data = parsed.data;
   const existing = await prisma.story.findUnique({ where: { id } });
   if (!existing) throw new Error("Story not found");
   const blocks = parseBody(data.body);

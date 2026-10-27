@@ -42,10 +42,12 @@ export function StoryEditor({ story, canDelete }: { story: Story; canDelete: boo
   const [saving, setSaving] = useState(false);
 
   function payload() {
+    const fallbackTitle = title.trim() || "Untitled story";
+    const fallbackDek = dek.trim() || fallbackTitle;
     return {
-      title: title || "Untitled story",
+      title: fallbackTitle,
       subtitle,
-      dek: dek || title,
+      dek: fallbackDek.length >= 8 ? fallbackDek : `${fallbackDek} — draft in progress.`,
       category: category as StoryCategory,
       visualTheme,
       seoDescription,
@@ -60,8 +62,12 @@ export function StoryEditor({ story, canDelete }: { story: Story; canDelete: boo
   async function save() {
     setSaving(true);
     setMessage(null);
-    await saveStoryDraft(story.id, payload());
+    const result = await saveStoryDraft(story.id, payload());
     setSaving(false);
+    if (result && "error" in result && result.error) {
+      setMessage(result.error);
+      return;
+    }
     setMessage("Draft saved.");
     router.refresh();
   }
@@ -220,7 +226,12 @@ export function StoryEditor({ story, canDelete }: { story: Story; canDelete: boo
                 type="button"
                 className="rounded-full bg-lime px-4 py-2 text-sm text-[#142006]"
                 onClick={async () => {
-                  await saveStoryDraft(story.id, payload());
+                  const result = await saveStoryDraft(story.id, payload());
+                  if (result && "error" in result && result.error) {
+                    setMessage(result.error);
+                    setPublishing(false);
+                    return;
+                  }
                   if (schedule) await setStoryStatus(story.id, "SCHEDULED", new Date(schedule).toISOString());
                   else await setStoryStatus(story.id, "PUBLISHED");
                   setPublishing(false);
