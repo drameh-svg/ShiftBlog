@@ -176,6 +176,15 @@ body {
   font-family: var(--font-serif);
 }
 
+/* Same typeface as article body paragraphs. Color is set by the caller. */
+.article-copy {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
 .progress {
   position: fixed;
   top: 0;
@@ -351,9 +360,11 @@ body {
 
 .splash-title-kicker {
   font-family: var(--font-sans);
-  font-size: 1rem;
+  font-size: 1.125rem;
+  line-height: 1.8;
   font-weight: 400;
-  letter-spacing: 0;
+  font-style: normal;
+  letter-spacing: normal;
   text-transform: none;
   color: var(--muted);
 }
