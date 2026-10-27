@@ -99,58 +99,49 @@ export function StickyDiscussion({
         </div>
       </div>
 
-      {userId ? (
-        <div className="mt-8 rounded-[1.4rem] border border-line p-4">
-          <label htmlFor="note" className="text-sm font-medium">
-            Add a note
-          </label>
-          <textarea
-            id="note"
-            value={body}
-            onChange={(event) => setBody(event.target.value)}
-            rows={3}
-            className="mt-2 w-full resize-y rounded-xl border border-line bg-transparent p-3 text-sm outline-none focus:border-purple"
-            placeholder="A thought, a challenge, a question…"
-          />
-          <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-            <div className="flex gap-2" role="radiogroup" aria-label="Note color">
-              {NOTE_COLORS.map((value) => (
-                <button
-                  key={value}
-                  type="button"
-                  aria-label={value}
-                  onClick={() => setColor(value)}
-                  className={`h-7 w-7 rounded-full note note-${value} ${color === value ? "ring-2 ring-fg" : ""}`}
-                />
-              ))}
-            </div>
-            <button type="button" onClick={submit} className="rounded-full bg-fg px-4 py-2 text-sm text-bg">
-              Post note
-            </button>
+      <div className="mt-8 rounded-[1.4rem] border border-line p-4">
+        <label htmlFor="note" className="text-sm font-medium">
+          Add a note
+        </label>
+        <p className="mt-1 text-xs text-muted">Posted as Anonymous. No account needed.</p>
+        <textarea
+          id="note"
+          value={body}
+          onChange={(event) => setBody(event.target.value)}
+          rows={3}
+          className="mt-2 w-full resize-y rounded-xl border border-line bg-transparent p-3 text-sm outline-none focus:border-purple"
+          placeholder="A thought, a challenge, a question…"
+        />
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex gap-2" role="radiogroup" aria-label="Note color">
+            {NOTE_COLORS.map((value) => (
+              <button
+                key={value}
+                type="button"
+                aria-label={value}
+                onClick={() => setColor(value)}
+                className={`h-7 w-7 rounded-full note note-${value} ${color === value ? "ring-2 ring-fg" : ""}`}
+              />
+            ))}
           </div>
-          {view === "canvas" && (
-            <p className="mt-2 text-xs text-faint">
-              {place
-                ? "Note will land where you clicked the board."
-                : "Click the board to place your note, or we will pick a spot."}
-            </p>
-          )}
-          {error && <p className="mt-2 text-sm text-danger">{error}</p>}
+          <button type="button" onClick={submit} className="rounded-full bg-fg px-4 py-2 text-sm text-bg">
+            Post note
+          </button>
         </div>
-      ) : (
-        <p className="mt-6 text-sm text-muted">
-          <a href="/sign-in?next=/read" className="text-purple">
-            Sign in
-          </a>{" "}
-          to add a note to this story.
-        </p>
-      )}
+        {view === "canvas" && (
+          <p className="mt-2 text-xs text-faint">
+            {place
+              ? "Note will land where you clicked the board."
+              : "Click the board to place your note, or we will pick a spot."}
+          </p>
+        )}
+        {error && <p className="mt-2 text-sm text-danger">{error}</p>}
+      </div>
 
       {view === "canvas" ? (
         <div
           className="note-board relative mt-8 h-[32rem] overflow-hidden rounded-[1.6rem] border border-dashed border-line sm:h-[36rem]"
           onClick={(event) => {
-            if (!userId) return;
             if ((event.target as HTMLElement).closest("[data-note]")) return;
             const rect = event.currentTarget.getBoundingClientRect();
             const x = ((event.clientX - rect.left) / rect.width) * 100;
@@ -234,12 +225,10 @@ function NoteInner({ note, userId, compact }: { note: Note; userId?: string; com
         <button type="button" onClick={() => react("disagree")} className="rounded-full bg-black/10 px-2 py-1">
           Disagree {disagrees}
         </button>
-        {userId && (
-          <button type="button" onClick={() => setOpen((v) => !v)} className="rounded-full bg-black/10 px-2 py-1">
-            Reply
-          </button>
-        )}
-        {userId && !compact && (
+        <button type="button" onClick={() => setOpen((v) => !v)} className="rounded-full bg-black/10 px-2 py-1">
+          Reply
+        </button>
+        {!compact && (
           <button type="button" onClick={() => reportComment(note.id)} className="rounded-full bg-black/10 px-2 py-1">
             Report
           </button>

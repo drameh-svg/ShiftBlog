@@ -2,14 +2,16 @@
 
 A USC student-led publication on technology, artificial intelligence, ethics, and public policy.
 
-**Read → Discuss → Contribute → Act**
+**Read → Discuss → Act**
+
+Readers post on stories and discussions anonymously. No public account is required.
 
 ## Stack
 
 - Next.js 16 (App Router) + TypeScript
 - Tailwind CSS 4
 - Prisma + SQLite
-- Signed HTTP-only sessions (`jose`) with server-enforced roles
+- Signed HTTP-only sessions (`jose`) for the editorial desk only
 
 ## Setup
 
@@ -51,28 +53,26 @@ npm run start:live
 
 If you open a Cursor Cloud preview URL (`*.agent.cvm.dev`) and see **HTTP 502**, the app is not running in that cloud session. Refresh after the agent starts the server, or use localhost on your machine instead.
 
-## Demo accounts
+## Editorial accounts
 
-These are seeded for local review. Change them before any real deployment.
+These are seeded for the desk. Change them before any real deployment. Public sign-up is disabled.
 
 | Role | Email | Password |
 | --- | --- | --- |
 | Admin | `julia.chen@shiftpolicy.org` | `ShiftAdmin2026!` |
 | Editor | `marcus.owens@shiftpolicy.org` | `ShiftEditor2026!` |
-| Public student | `sam.okonkwo@usc.edu` | `StudentDemo2026!` |
 
-A public account can read, comment, discuss, and submit. It **cannot** open `/editor`. Editorial authorization is enforced in `src/proxy.ts` and again in the editorial layout and server actions against the database role.
+Editorial authorization is enforced in `src/proxy.ts` and again in the editorial layout and server actions against the database role.
 
 ## Routes
 
-- `/` homepage
+- `/` homepage (logo splash, then landing)
 - `/read` article index (Campus, Latest news, Op-eds)
-- `/stories/[slug]` individual articles
-- `/discuss` and debate threads
+- `/stories/[slug]` individual articles, with anonymous notes
+- `/discuss` anonymous discussion threads
 - `/involve` opportunities
-- `/submit` ideas and writing
 - `/editor` private SHIFT Editorial desk
 
 ## Publishing
 
-Editors sign in, choose **+ New Story**, write, save a draft, preview, then publish. Admins can delete stories and manage team roles.
+Articles are added by editors for now. Sign in at `/sign-in`, open **+ New Story**, write, save a draft, preview, then publish. A self-serve desk upload process is planned. Admins can delete stories and manage team roles.

@@ -298,6 +298,70 @@ body {
   border: 0;
 }
 
+.splash-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  background: var(--bg);
+  transition: opacity 520ms ease;
+}
+
+.splash-overlay-exit {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.splash-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.splash-logo {
+  width: 7.5rem;
+  height: 7.5rem;
+  border-radius: 999px;
+  animation: splash-spin 1.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.splash-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  color: var(--muted);
+  animation: splash-title 700ms ease 1.25s both;
+}
+
+@keyframes splash-spin {
+  0% {
+    transform: rotate(-20deg) scale(0.72);
+    opacity: 0;
+  }
+  18% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes splash-title {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

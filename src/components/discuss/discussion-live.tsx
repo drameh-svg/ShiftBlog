@@ -52,7 +52,7 @@ export function DiscussionThread({
           </button>
         </form>
       ) : (
-        <p className="text-sm text-muted">{locked ? "This discussion is locked." : "Sign in to participate."}</p>
+        <p className="text-sm text-muted">{locked ? "This discussion is locked." : "Take a stance, then add your perspective."}</p>
       )}
       <ol className="mt-8 space-y-4">
         {posts.map((post) => (

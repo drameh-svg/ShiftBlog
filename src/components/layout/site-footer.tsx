@@ -26,11 +26,10 @@ export function SiteFooter() {
           </ul>
         </div>
         <div>
-          <p className="text-[11px] uppercase tracking-[0.16em] text-faint">Contribute</p>
+          <p className="text-[11px] uppercase tracking-[0.16em] text-faint">Discuss</p>
           <ul className="mt-3 space-y-2 text-sm">
-            <li><Link href="/submit/idea" className="hover:text-purple">Submit an Idea</Link></li>
-            <li><Link href="/submit/writing" className="hover:text-purple">Write for SHIFT</Link></li>
-            <li><Link href="/sign-in" className="hover:text-purple">Sign In</Link></li>
+            <li><Link href="/discuss" className="hover:text-purple">Join a conversation</Link></li>
+            <li><Link href="/involve" className="hover:text-purple">Get Involved</Link></li>
           </ul>
         </div>
       </div>

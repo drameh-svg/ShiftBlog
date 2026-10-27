@@ -7,6 +7,7 @@ import { EditorialVisual } from "@/components/stories/editorial-visual";
 import { ReadingProgress } from "@/components/stories/reading-progress";
 import { StickyDiscussion } from "@/components/stories/sticky-discussion";
 import { getCurrentUser } from "@/lib/auth";
+import { findActor } from "@/lib/guest";
 import { isEditorial } from "@/lib/permissions";
 import { getRelatedStories, getStoryBySlug, isPublicStory } from "@/lib/queries";
 import { prisma } from "@/lib/prisma";
@@ -37,6 +38,7 @@ export default async function StoryPage({
   const { slug } = await params;
   const query = await searchParams;
   const user = await getCurrentUser();
+  const actor = await findActor();
   const preview = query.preview === "1" && user && isEditorial(user.role);
   const story = await getStoryBySlug(slug);
   if (!story) notFound();
@@ -66,7 +68,7 @@ export default async function StoryPage({
         <ArticleBody raw={story.body} />
       </div>
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        <StickyDiscussion storyId={story.id} notes={comments} userId={user?.id} />
+        <StickyDiscussion storyId={story.id} notes={comments} userId={actor?.id} />
         {related.length > 0 && (
           <section className="mt-16">
             <h2 className="display text-3xl">Related stories</h2>

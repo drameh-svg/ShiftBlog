@@ -1,13 +1,13 @@
 import { notFound } from "next/navigation";
 import { ChannelChat, type ChatMessage } from "@/components/discuss/channel-chat";
-import { getCurrentUser } from "@/lib/auth";
+import { findActor } from "@/lib/guest";
 import { DISCUSSION_TOPIC_LABELS, isStance, type Stance } from "@/lib/content";
 import { prisma } from "@/lib/prisma";
 import type { SlugParams } from "@/lib/page-props";
 
 export default async function DiscussionPage({ params }: { params: SlugParams }) {
   const { slug } = await params;
-  const user = await getCurrentUser();
+  const user = await findActor();
   const discussion = await prisma.discussion.findUnique({
     where: { slug },
     include: {

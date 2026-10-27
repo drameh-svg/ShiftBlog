@@ -28,7 +28,6 @@ export function ChannelChat({
   prompt,
   topicLabel,
   locked,
-  userId,
   userStance,
   counts,
   messages,
@@ -169,13 +168,6 @@ export function ChannelChat({
       <div className="discuss-composer border-t border-line px-4 py-3 sm:px-6">
         {locked ? (
           <p className="text-sm text-muted">This topic is locked.</p>
-        ) : !userId ? (
-          <p className="text-sm text-muted">
-            <a href="/sign-in?next=/discuss" className="text-purple">
-              Sign in
-            </a>{" "}
-            to join this chat.
-          </p>
         ) : changing || !userStance ? (
           <div>
             <p className="text-sm font-medium">Where do you stand on this before you speak?</p>

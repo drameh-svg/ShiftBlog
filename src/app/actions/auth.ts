@@ -8,7 +8,6 @@ import {
   SESSION_COOKIE,
   createSessionToken,
   getCurrentUser,
-  hashPassword,
   verifyPassword,
 } from "@/lib/auth";
 
@@ -43,8 +42,8 @@ export async function signInAction(_: unknown, formData: FormData) {
     return { error: "Enter a valid email and password." };
   }
   const user = await prisma.user.findUnique({ where: { email: parsed.data.email.toLowerCase() } });
-  if (!user || !(await verifyPassword(parsed.data.password, user.passwordHash))) {
-    return { error: "Those credentials do not match a SHIFT account." };
+  if (!user || user.role === "PUBLIC" || !(await verifyPassword(parsed.data.password, user.passwordHash))) {
+    return { error: "Those credentials do not match a SHIFT editorial account." };
   }
   const token = await createSessionToken({
     id: user.id,
@@ -55,43 +54,11 @@ export async function signInAction(_: unknown, formData: FormData) {
   });
   await setSessionCookie(token);
   const next = safeNextPath(formData.get("next"));
-  redirect(next ?? (user.role === "PUBLIC" ? "/" : "/editor"));
+  redirect(next ?? "/editor");
 }
 
-export async function signUpAction(_: unknown, formData: FormData) {
-  const schema = z.object({
-    name: z.string().min(2).max(80),
-    email: z.string().email(),
-    password: z.string().min(8).max(80),
-  });
-  const parsed = schema.safeParse({
-    name: String(formData.get("name") ?? ""),
-    email: String(formData.get("email") ?? ""),
-    password: String(formData.get("password") ?? ""),
-  });
-  if (!parsed.success) {
-    return { error: "Name, a valid email, and a password of at least 8 characters are required." };
-  }
-  const email = parsed.data.email.toLowerCase();
-  const existing = await prisma.user.findUnique({ where: { email } });
-  if (existing) return { error: "An account with that email already exists." };
-  const user = await prisma.user.create({
-    data: {
-      name: parsed.data.name,
-      email,
-      passwordHash: await hashPassword(parsed.data.password),
-      role: "PUBLIC",
-    },
-  });
-  const token = await createSessionToken({
-    id: user.id,
-    email: user.email,
-    name: user.name,
-    role: user.role,
-    title: user.title,
-  });
-  await setSessionCookie(token);
-  redirect("/");
+export async function signUpAction() {
+  return { error: "SHIFT no longer uses public accounts. Discuss and comment anonymously." };
 }
 
 export async function signOutAction() {

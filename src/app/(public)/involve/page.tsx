@@ -17,10 +17,14 @@ const TYPES: { id: string; label: string; value?: OpportunityType }[] = [
 export default async function InvolvePage({ searchParams }: { searchParams: Search }) {
   const params = await searchParams;
   const type = TYPES.find((item) => item.id === params.type);
-  const opportunities = await prisma.opportunity.findMany({
-    where: type?.value ? { type: type.value } : {},
-    orderBy: [{ status: "asc" }, { urgent: "desc" }],
-  });
+  const [opportunities, available] = await Promise.all([
+    prisma.opportunity.findMany({
+      where: type?.value ? { type: type.value } : {},
+      orderBy: [{ status: "asc" }, { urgent: "desc" }],
+    }),
+    prisma.opportunity.findMany({ select: { type: true } }),
+  ]);
+  const present = new Set(available.map((item) => item.type));
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
@@ -30,7 +34,7 @@ export default async function InvolvePage({ searchParams }: { searchParams: Sear
         Policy is not only an article. It is a meeting, a petition, a comment window, a seat in the room. These are live ways to influence technology decisions on campus.
       </p>
       <div className="mt-8 flex gap-2 overflow-x-auto pb-2">
-        {TYPES.map((item) => (
+        {TYPES.filter((item) => item.id === "all" || (item.value && present.has(item.value))).map((item) => (
           <a
             key={item.id}
             href={item.id === "all" ? "/involve" : `/involve?type=${item.id}`}

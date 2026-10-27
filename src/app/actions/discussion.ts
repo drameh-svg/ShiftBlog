@@ -3,7 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { getCurrentUser, requireEditorial } from "@/lib/auth";
+import { requireEditorial } from "@/lib/auth";
+import { getActor } from "@/lib/guest";
 import { DISCUSSION_TOPIC_ORDER, isStance, NOTE_COLORS, slugify, type Stance } from "@/lib/content";
 import type { DiscussionTopic } from "@prisma/client";
 
@@ -19,8 +20,7 @@ export async function addComment(input: {
   posX?: number;
   posY?: number;
 }) {
-  const user = await getCurrentUser();
-  if (!user) return { error: "Sign in to comment." };
+  const user = await getActor();
   const body = input.body.trim();
   if (body.length < 3) return { error: "Say a little more — at least a sentence." };
   if (body.length > 600) return { error: "Keep notes under 600 characters." };
@@ -43,8 +43,7 @@ export async function addComment(input: {
 }
 
 export async function addCommentReply(commentId: string, body: string) {
-  const user = await getCurrentUser();
-  if (!user) return { error: "Sign in to reply." };
+  const user = await getActor();
   const text = body.trim();
   if (text.length < 2) return { error: "Reply is too short." };
   const comment = await prisma.comment.findUnique({ where: { id: commentId }, include: { story: true } });
@@ -55,8 +54,7 @@ export async function addCommentReply(commentId: string, body: string) {
 }
 
 export async function reactToComment(commentId: string, type: "agree" | "disagree") {
-  const user = await getCurrentUser();
-  if (!user) return { error: "Sign in to react." };
+  const user = await getActor();
   const comment = await prisma.comment.findUnique({ where: { id: commentId }, include: { story: true } });
   if (!comment) return { error: "Comment not found." };
   const existing = await prisma.reaction.findFirst({
@@ -72,8 +70,7 @@ export async function reactToComment(commentId: string, type: "agree" | "disagre
 }
 
 export async function reportComment(commentId: string) {
-  const user = await getCurrentUser();
-  if (!user) return { error: "Sign in to report." };
+  const user = await getActor();
   await prisma.report.create({
     data: { reporterId: user.id, commentId, reason: "inappropriate" },
   });
@@ -81,8 +78,7 @@ export async function reportComment(commentId: string) {
 }
 
 export async function castDiscussionVote(discussionId: string, choice: Stance) {
-  const user = await getCurrentUser();
-  if (!user) return { error: "Sign in to take a stance." };
+  const user = await getActor();
   if (!isStance(choice)) return { error: "Choose For, Against, or Still thinking." };
   const discussion = await prisma.discussion.findUnique({ where: { id: discussionId } });
   if (!discussion || discussion.locked) return { error: "This discussion is closed." };
@@ -98,8 +94,7 @@ export async function castDiscussionVote(discussionId: string, choice: Stance) {
 }
 
 export async function addDiscussionPost(discussionId: string, body: string) {
-  const user = await getCurrentUser();
-  if (!user) return { error: "Sign in to join the discussion." };
+  const user = await getActor();
   const text = body.trim();
   if (text.length < 2) return { error: "Add a complete thought." };
   if (text.length > 2000) return { error: "Keep messages under 2,000 characters." };
@@ -119,8 +114,12 @@ export async function addDiscussionPost(discussionId: string, body: string) {
 }
 
 export async function startDiscussion(input: { title: string; prompt: string; topic: string }) {
-  const user = await getCurrentUser();
-  if (!user) return { error: "Sign in to start a topic." };
+  let user;
+  try {
+    user = await requireEditorial();
+  } catch {
+    return { error: "Only the editorial desk can open a topic." };
+  }
   const title = input.title.trim();
   const prompt = input.prompt.trim();
   if (title.length < 8) return { error: "Give the topic a fuller title." };
@@ -140,8 +139,7 @@ export async function startDiscussion(input: { title: string; prompt: string; to
 }
 
 export async function addDebateArgument(discussionId: string, side: "FOR" | "AGAINST", body: string) {
-  const user = await getCurrentUser();
-  if (!user) return { error: "Sign in to add an argument." };
+  const user = await getActor();
   const text = body.trim();
   if (text.length < 12) return { error: "Arguments should be a complete claim." };
   if (side !== "FOR" && side !== "AGAINST") return { error: "Choose a side." };
@@ -155,8 +153,7 @@ export async function addDebateArgument(discussionId: string, side: "FOR" | "AGA
 }
 
 export async function reactToArgument(argumentId: string, type: "support" | "challenge") {
-  const user = await getCurrentUser();
-  if (!user) return { error: "Sign in to react." };
+  const user = await getActor();
   const argument = await prisma.debateArgument.findUnique({
     where: { id: argumentId },
     include: { discussion: true },

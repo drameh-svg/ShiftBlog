@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Atmosphere } from "@/components/layout/atmosphere";
+import { SplashIntro } from "@/components/layout/splash-intro";
 import { EditorialVisual } from "@/components/stories/editorial-visual";
 import {
   BriefCard,
@@ -42,6 +43,7 @@ export default async function HomePage() {
 
   return (
     <div>
+      <SplashIntro />
       <section className="relative overflow-hidden">
         <Atmosphere />
         <div className="relative mx-auto grid max-w-6xl items-end gap-10 px-4 pb-16 pt-10 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:pt-16">
@@ -106,6 +108,7 @@ export default async function HomePage() {
           </div>
         </section>
 
+        {briefs.length > 0 && (
         <section className="py-6">
           <div className="flex items-end justify-between">
             <h2 className="display text-3xl">The Brief</h2>
@@ -119,6 +122,7 @@ export default async function HomePage() {
             ))}
           </div>
         </section>
+        )}
 
         <section className="py-14">
           <div className="flex items-end justify-between">
@@ -141,7 +145,7 @@ export default async function HomePage() {
               Make Your Voice Heard →
             </Link>
           </div>
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
             {opportunities.map((opportunity) => (
               <OpportunityCard key={opportunity.id} opportunity={opportunity} />
             ))}
@@ -158,17 +162,17 @@ export default async function HomePage() {
         <section className="relative my-10 overflow-hidden rounded-[2rem] border border-line px-6 py-12 sm:px-12">
           <Atmosphere />
           <div className="relative max-w-xl">
-            <p className="text-[11px] uppercase tracking-[0.18em] text-lime">Have something to say?</p>
-            <h2 className="display mt-3 text-4xl sm:text-5xl">SHIFT publishes student thinking that the institution needs to hear.</h2>
+            <p className="text-[11px] uppercase tracking-[0.18em] text-lime">Join the conversation</p>
+            <h2 className="display mt-3 text-4xl sm:text-5xl">Post anonymously. No account required.</h2>
             <p className="mt-4 text-muted">
-              Submit an idea we should investigate, or send writing for editorial review.
+              Take a stance on campus questions and leave notes on stories without signing in.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Link href="/submit/idea" className="rounded-full bg-lime px-5 py-3 text-sm font-medium text-[#142006]">
-                Submit an Idea →
+              <Link href="/discuss" className="rounded-full bg-lime px-5 py-3 text-sm font-medium text-[#142006]">
+                Open Discuss →
               </Link>
-              <Link href="/submit/writing" className="rounded-full border border-line px-5 py-3 text-sm">
-                Write for SHIFT →
+              <Link href="/involve" className="rounded-full border border-line px-5 py-3 text-sm">
+                Get Involved →
               </Link>
             </div>
           </div>

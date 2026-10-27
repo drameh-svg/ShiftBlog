@@ -12,7 +12,7 @@ export default async function DiscussPage() {
       <div>
         <p className="text-[11px] uppercase tracking-[0.18em] text-lime">Discuss</p>
         <h1 className="display mt-2 text-3xl">No topics yet</h1>
-        <p className="mt-2 text-sm text-muted">Start a channel from the sidebar once you sign in.</p>
+        <p className="mt-2 text-sm text-muted">A prompt will appear here when the desk opens a topic.</p>
       </div>
     </div>
   );

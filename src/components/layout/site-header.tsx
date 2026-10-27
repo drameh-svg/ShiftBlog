@@ -13,7 +13,6 @@ const NAV = [
   { href: "/read", label: "Read" },
   { href: "/discuss", label: "Discuss" },
   { href: "/involve", label: "Get Involved" },
-  { href: "/submit", label: "Submit" },
 ];
 
 export function SiteHeader({ user }: { user: SessionUser | null }) {
@@ -66,18 +65,14 @@ export function SiteHeader({ user }: { user: SessionUser | null }) {
           <div className="flex items-center gap-2">
             <SearchButton onOpen={() => setOpenSearch(true)} />
             <ThemeToggle />
-            {user ? (
+            {user && isEditorial(user.role) ? (
               <Link
-                href={isEditorial(user.role) ? "/editor" : "/profile"}
+                href="/editor"
                 className="inline-flex h-10 items-center rounded-full border border-line px-3 text-sm"
               >
-                {user.name.split(" ")[0]}
+                Desk
               </Link>
-            ) : (
-              <Link href="/sign-in" className="inline-flex h-10 items-center rounded-full bg-fg px-3.5 text-sm text-bg">
-                Sign In
-              </Link>
-            )}
+            ) : null}
           </div>
         </div>
       </header>
@@ -116,13 +111,6 @@ export function MobileNav() {
           </Link>
         );
       })}
-      <Link
-        href="/submit"
-        className="flex min-w-[64px] flex-col items-center gap-0.5 rounded-xl px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-purple"
-      >
-        <SubmitIcon />
-        Submit
-      </Link>
     </nav>
   );
 }
@@ -154,13 +142,6 @@ function InvolveIcon({ active }: { active: boolean }) {
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
       <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth={active ? 1.8 : 1.5} />
       <path d="M12 8v8M8 12h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
-function SubmitIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }
