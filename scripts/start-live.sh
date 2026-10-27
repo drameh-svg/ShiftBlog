@@ -19,12 +19,7 @@ set +a
 npx prisma generate
 npx prisma db push
 
-npx tsx -e '
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
-const users = await prisma.user.count();
-await prisma.$disconnect();
-if (users === 0) process.exit(2);
-' || npx tsx prisma/seed.ts
+node --input-type=module -e 'import { PrismaClient } from "@prisma/client"; const prisma = new PrismaClient(); const users = await prisma.user.count(); await prisma.$disconnect(); process.exit(users === 0 ? 2 : 0);' \
+  || npx tsx prisma/seed.ts
 
 exec npx next start --hostname 0.0.0.0 --port "${PORT:-3000}"
