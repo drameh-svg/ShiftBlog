@@ -367,9 +367,9 @@ body {
   html {
     scroll-behavior: auto;
   }
-  *,
-  *::before,
-  *::after {
+  *:not(.splash-overlay):not(.splash-stage):not(.splash-logo):not(.splash-title),
+  *:not(.splash-overlay):not(.splash-stage):not(.splash-logo):not(.splash-title)::before,
+  *:not(.splash-overlay):not(.splash-stage):not(.splash-logo):not(.splash-title)::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

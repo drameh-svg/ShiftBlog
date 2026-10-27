@@ -8,10 +8,6 @@ export function SplashIntro() {
   const [phase, setPhase] = useState<"play" | "exit" | "hidden">("play");
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setPhase("hidden");
-      return;
-    }
     try {
       if (sessionStorage.getItem(STORAGE_KEY) === "1") {
         setPhase("hidden");
