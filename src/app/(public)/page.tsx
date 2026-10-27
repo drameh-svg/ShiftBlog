@@ -162,17 +162,17 @@ export default async function HomePage() {
         <section className="relative my-10 overflow-hidden rounded-[2rem] border border-line px-6 py-12 sm:px-12">
           <Atmosphere />
           <div className="relative max-w-xl">
-            <p className="text-[11px] uppercase tracking-[0.18em] text-lime">Join the conversation</p>
-            <h2 className="display mt-3 text-4xl sm:text-5xl">Post anonymously. No account required.</h2>
+            <p className="text-[11px] uppercase tracking-[0.18em] text-lime">Have something to say?</p>
+            <h2 className="display mt-3 text-4xl sm:text-5xl">SHIFT publishes student thinking that the institution needs to hear.</h2>
             <p className="mt-4 text-muted">
-              Take a stance on campus questions and leave notes on stories without signing in.
+              Submit an idea we should investigate, or send writing for editorial review. No account required.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Link href="/discuss" className="rounded-full bg-lime px-5 py-3 text-sm font-medium text-[#142006]">
-                Open Discuss →
+              <Link href="/submit/idea" className="rounded-full bg-lime px-5 py-3 text-sm font-medium text-[#142006]">
+                Submit an Idea →
               </Link>
-              <Link href="/involve" className="rounded-full border border-line px-5 py-3 text-sm">
-                Get Involved →
+              <Link href="/submit/writing" className="rounded-full border border-line px-5 py-3 text-sm">
+                Write for SHIFT →
               </Link>
             </div>
           </div>

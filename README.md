@@ -71,6 +71,7 @@ Editorial authorization is enforced in `src/proxy.ts` and again in the editorial
 - `/stories/[slug]` individual articles, with anonymous notes
 - `/discuss` anonymous discussion threads
 - `/involve` opportunities
+- `/submit` idea and writing requests (no account required; editors review at the desk)
 - `/editor` private SHIFT Editorial desk
 
 ## Publishing

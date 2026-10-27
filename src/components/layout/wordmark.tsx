@@ -21,7 +21,7 @@ export function Wordmark({
       />
       <span className={stacked ? "flex flex-col leading-none" : "flex items-baseline gap-2 leading-none"}>
         <span className="text-[15px] font-semibold tracking-[-0.04em]">SHIFT</span>
-        <span className={`text-[11px] uppercase tracking-[0.18em] text-muted ${stacked ? "mt-1" : ""}`}>
+        <span className={`text-sm font-normal tracking-normal text-muted ${stacked ? "mt-1" : ""}`}>
           Public Policy
         </span>
       </span>

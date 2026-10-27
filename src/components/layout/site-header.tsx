@@ -13,6 +13,7 @@ const NAV = [
   { href: "/read", label: "Read" },
   { href: "/discuss", label: "Discuss" },
   { href: "/involve", label: "Get Involved" },
+  { href: "/submit", label: "Submit" },
 ];
 
 export function SiteHeader({ user }: { user: SessionUser | null }) {
@@ -111,6 +112,13 @@ export function MobileNav() {
           </Link>
         );
       })}
+      <Link
+        href="/submit"
+        className={`flex min-w-[64px] flex-col items-center gap-0.5 rounded-xl px-2 py-1 text-[10px] uppercase tracking-[0.12em] ${pathname.startsWith("/submit") ? "text-lime" : "text-purple"}`}
+      >
+        <SubmitIcon />
+        Submit
+      </Link>
     </nav>
   );
 }
@@ -134,6 +142,13 @@ function DiscussIcon({ active }: { active: boolean }) {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path d="M5 7.5A3.5 3.5 0 0 1 8.5 4h7A3.5 3.5 0 0 1 19 7.5v5A3.5 3.5 0 0 1 15.5 16H10l-5 3v-3.2A3.5 3.5 0 0 1 5 12.5v-5Z" stroke="currentColor" strokeWidth={active ? 1.8 : 1.5} />
+    </svg>
+  );
+}
+function SubmitIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }
