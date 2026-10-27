@@ -21,7 +21,7 @@ export function SplashIntro() {
       // sessionStorage can be blocked; still play the intro.
     }
 
-    const exitTimer = window.setTimeout(() => setPhase("exit"), 2800);
+    const exitTimer = window.setTimeout(() => setPhase("exit"), 3200);
     const hideTimer = window.setTimeout(() => {
       try {
         sessionStorage.setItem(STORAGE_KEY, "1");
@@ -29,7 +29,7 @@ export function SplashIntro() {
         // ignore
       }
       setPhase("hidden");
-    }, 3400);
+    }, 3800);
 
     return () => {
       window.clearTimeout(exitTimer);
