@@ -76,16 +76,16 @@ export function MidtermPoll({
               disabled={pending}
               onClick={() => vote(option.id)}
               className={`relative w-full overflow-hidden rounded-[1.2rem] border px-4 py-4 text-left transition ${
-                selected ? "border-lime bg-lime/10" : "border-line hover:border-purple/50"
+                selected ? "border-lime" : "border-line hover:border-purple/50"
               }`}
             >
               <span
-                className={`absolute inset-y-0 left-0 ${selected ? "bg-lime/20" : "bg-purple/10"}`}
+                className={`absolute inset-y-0 left-0 ${selected ? "bg-lime/15" : "bg-purple/10"}`}
                 style={{ width: `${percent}%` }}
                 aria-hidden
               />
-              <span className="relative flex items-center justify-between gap-4">
-                <span className="text-base">{option.label}</span>
+              <span className="relative z-10 flex items-center justify-between gap-4">
+                <span className="text-base font-medium text-fg">{option.label}</span>
                 <span className="text-sm text-muted">
                   {total === 0 && !choiceId ? "Vote" : `${percent}% · ${votes}`}
                 </span>
