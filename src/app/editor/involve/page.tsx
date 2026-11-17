@@ -2,9 +2,10 @@ import { prisma } from "@/lib/prisma";
 import { saveOpportunity } from "@/app/actions/opportunities";
 import { StatusBadge } from "@/components/involve/opportunity-card";
 import { formatDate } from "@/lib/format";
+import { isGuestEmail } from "@/lib/public-user";
 
 export default async function EditorInvolvePage() {
-  const [opportunities, votes] = await Promise.all([
+  const [opportunities, pollVotes] = await Promise.all([
     prisma.opportunity.findMany({ orderBy: { updatedAt: "desc" } }),
     prisma.pollVote.findMany({
       orderBy: { updatedAt: "desc" },
@@ -15,6 +16,7 @@ export default async function EditorInvolvePage() {
       },
     }),
   ]);
+  const votes = pollVotes.filter((vote) => !isGuestEmail(vote.user.email));
 
   return (
     <div>

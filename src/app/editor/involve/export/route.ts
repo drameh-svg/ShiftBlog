@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireEditorial } from "@/lib/auth";
 import { spreadsheetCsv } from "@/lib/spreadsheet";
+import { isGuestEmail } from "@/lib/public-user";
 
 export async function GET() {
   try {
@@ -18,7 +19,9 @@ export async function GET() {
     },
   });
   const csv = spreadsheetCsv(
-    votes.map((vote) => ({
+    votes
+      .filter((vote) => !isGuestEmail(vote.user.email))
+      .map((vote) => ({
       submittedAt: vote.updatedAt.toISOString(),
       email: vote.user.email,
       name: vote.user.name,
