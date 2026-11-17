@@ -99,7 +99,7 @@ export function MidtermPoll({
         })}
       </div>
       {error && <p className="mt-4 text-sm text-danger">{error}</p>}
-      {choiceId && (
+      {signedIn && choiceId && (
         <p className="mt-4 text-sm text-muted">
           You voted. You can change your answer.
         </p>
