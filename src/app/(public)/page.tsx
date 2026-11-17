@@ -12,12 +12,11 @@ import {
   TextStory,
 } from "@/components/stories/story-cards";
 import { DiscussionCard } from "@/components/discuss/discussion-card";
-import { OpportunityCard } from "@/components/involve/opportunity-card";
 import { prisma } from "@/lib/prisma";
 import { getLeadStory, getPublishedStories } from "@/lib/queries";
 
 export default async function HomePage() {
-  const [lead, latest, discussions, opportunities] = await Promise.all([
+  const [lead, latest, discussions, poll] = await Promise.all([
     getLeadStory(),
     getPublishedStories({ take: 16 }),
     prisma.discussion.findMany({
@@ -28,10 +27,9 @@ export default async function HomePage() {
       orderBy: { updatedAt: "desc" },
       take: 4,
     }),
-    prisma.opportunity.findMany({
-      where: { status: { in: ["OPEN", "CLOSING_SOON", "UPCOMING", "ONGOING"] } },
-      orderBy: [{ urgent: "desc" }, { deadline: "asc" }],
-      take: 3,
+    prisma.poll.findUnique({
+      where: { slug: "2026-midterms" },
+      include: { _count: { select: { votes: true } } },
     }),
   ]);
 
@@ -83,6 +81,7 @@ export default async function HomePage() {
       </section>
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        {rest.length > 0 && (
         <section className="grid gap-10 border-t border-line py-14 lg:grid-cols-[0.9fr_1.2fr_0.9fr]">
           <div>
             <h2 className="text-[11px] uppercase tracking-[0.18em] text-faint">Latest</h2>
@@ -107,6 +106,7 @@ export default async function HomePage() {
             </div>
           </div>
         </section>
+        )}
 
         {briefs.length > 0 && (
         <section className="py-6">
@@ -145,11 +145,21 @@ export default async function HomePage() {
               Make Your Voice Heard →
             </Link>
           </div>
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            {opportunities.map((opportunity) => (
-              <OpportunityCard key={opportunity.id} opportunity={opportunity} />
-            ))}
-          </div>
+          {poll && (
+            <Link
+              href="/involve"
+              className="card-hover mt-6 block rounded-[1.6rem] border border-line bg-bg-elevated/70 p-7"
+            >
+              <p className="text-[11px] uppercase tracking-[0.16em] text-lime">2026 midterms</p>
+              <h3 className="display mt-3 text-3xl">{poll.question}</h3>
+              <p className="mt-3 text-sm leading-6 text-muted">
+                {poll._count.votes === 0
+                  ? "No votes yet. Take the poll — no account required."
+                  : `${poll._count.votes} ${poll._count.votes === 1 ? "student has" : "students have"} answered.`}
+              </p>
+              <p className="mt-6 text-sm text-purple">Make your voice heard →</p>
+            </Link>
+          )}
         </section>
 
         {rest[5] && (

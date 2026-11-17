@@ -12,10 +12,37 @@ export function ArticleBody({ raw }: { raw: string }) {
   );
 }
 
+function LinkedText({ text }: { text: string }) {
+  const parts = text.split(/(https?:\/\/[^\s]+)/g);
+  return (
+    <>
+      {parts.map((part, index) =>
+        part.startsWith("http://") || part.startsWith("https://") ? (
+          <a
+            key={`${part}-${index}`}
+            href={part}
+            className="break-all text-purple underline decoration-purple/40 underline-offset-4"
+            target="_blank"
+            rel="noreferrer"
+          >
+            {part}
+          </a>
+        ) : (
+          <span key={`${part}-${index}`}>{part}</span>
+        ),
+      )}
+    </>
+  );
+}
+
 function BlockView({ block }: { block: Block }) {
   switch (block.type) {
     case "p":
-      return <p className="text-[1.125rem] leading-[1.8] text-fg/92">{block.text}</p>;
+      return (
+        <p className="text-[1.125rem] leading-[1.8] text-fg/92">
+          <LinkedText text={block.text} />
+        </p>
+      );
     case "h2":
       return <h2 className="display text-[1.8rem]">{block.text}</h2>;
     case "h3":
@@ -44,7 +71,9 @@ function BlockView({ block }: { block: Block }) {
       return (
         <ul className="mb-8 list-disc space-y-2 pl-6 text-[1.125rem] leading-8">
           {block.items.map((item) => (
-            <li key={item}>{item}</li>
+            <li key={item}>
+              <LinkedText text={item} />
+            </li>
           ))}
         </ul>
       );

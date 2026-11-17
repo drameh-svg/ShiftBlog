@@ -96,6 +96,7 @@ model User {
   ideaSubmissions     IdeaSubmission[]
   articleSubmissions  ArticleSubmission[]
   savedStories        SavedStory[]
+  pollVotes           PollVote[]
 }
 
 model Tag {
@@ -322,6 +323,39 @@ model Opportunity {
   urgent      Boolean            @default(false)
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
+}
+
+model Poll {
+  id        String       @id @default(cuid())
+  slug      String       @unique
+  question  String
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  options   PollOption[]
+  votes     PollVote[]
+}
+
+model PollOption {
+  id     String     @id @default(cuid())
+  pollId String
+  poll   Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  label  String
+  sort   Int        @default(0)
+  votes  PollVote[]
+}
+
+model PollVote {
+  id        String     @id @default(cuid())
+  pollId    String
+  poll      Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  optionId  String
+  option    PollOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@unique([pollId, userId])
 }
 
 model Report {
