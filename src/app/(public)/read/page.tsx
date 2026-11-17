@@ -15,7 +15,7 @@ export default async function ReadPage({ searchParams }: { searchParams: Search 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <p className="text-[11px] uppercase tracking-[0.18em] text-lime">Read</p>
-      <h1 className="display mt-2 max-w-3xl text-5xl sm:text-6xl">Read</h1>
+      <h1 className="display type-texture mt-2 max-w-3xl text-5xl sm:text-6xl">Read</h1>
       <div className="mt-8 flex gap-2 overflow-x-auto pb-2" aria-label="Topics">
         {READ_FILTERS.map((item) => (
           <FilterChip

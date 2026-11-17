@@ -20,7 +20,7 @@ export function Wordmark({
         priority
       />
       <span className={stacked ? "flex flex-col leading-none" : "flex items-baseline gap-2 leading-none"}>
-        <span className="text-[15px] font-semibold tracking-[-0.04em]">SHIFT</span>
+        <span className="display text-[15px]">SHIFT</span>
         <span className={`article-copy text-[1.125rem] leading-none text-muted ${stacked ? "mt-1" : ""}`}>
           Public Policy
         </span>

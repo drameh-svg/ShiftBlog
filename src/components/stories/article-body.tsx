@@ -44,27 +44,27 @@ function BlockView({ block }: { block: Block }) {
         </p>
       );
     case "h2":
-      return <h2 className="display text-[1.8rem]">{block.text}</h2>;
+      return <h2 className="deck">{block.text}</h2>;
     case "h3":
-      return <h3 className="text-xl tracking-[-0.03em]">{block.text}</h3>;
+      return <h3 className="label text-xl">{block.text}</h3>;
     case "quote":
       return (
         <blockquote className="my-8 border-l-2 border-lime pl-5">
-          <p className="serif text-2xl leading-snug">{block.text}</p>
-          {block.cite && <cite className="mt-3 block text-sm not-italic text-muted">— {block.cite}</cite>}
+          <p className="deck text-[2rem] leading-snug">{block.text}</p>
+          {block.cite && <cite className="caption mt-3 block text-sm not-italic text-muted">— {block.cite}</cite>}
         </blockquote>
       );
     case "pullquote":
       return (
         <aside className="my-12">
-          <p className="display max-w-xl text-[2.1rem] text-purple">{block.text}</p>
+          <p className="deck max-w-xl text-[clamp(2rem,4vw,3.125rem)] text-purple">{block.text}</p>
         </aside>
       );
     case "stat":
       return (
         <figure className="my-10 rounded-[1.5rem] border border-line bg-bg-elevated px-6 py-8 text-center">
-          <p className="display text-5xl text-lime">{block.value}</p>
-          <figcaption className="mt-2 text-sm text-muted">{block.label}</figcaption>
+          <p className="display type-texture text-5xl text-lime">{block.value}</p>
+          <figcaption className="caption mt-2 text-sm text-muted">{block.label}</figcaption>
         </figure>
       );
     case "ul":
@@ -91,7 +91,7 @@ function BlockView({ block }: { block: Block }) {
       return (
         <figure className="my-10 overflow-hidden rounded-[1.5rem]">
           <EditorialVisual theme={block.theme} className="h-64 w-full" />
-          {block.caption && <figcaption className="px-1 pt-3 text-sm text-muted">{block.caption}</figcaption>}
+          {block.caption && <figcaption className="caption px-1 pt-3 text-sm text-muted">{block.caption}</figcaption>}
         </figure>
       );
     default:

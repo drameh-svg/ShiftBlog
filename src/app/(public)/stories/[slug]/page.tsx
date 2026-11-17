@@ -56,8 +56,8 @@ export default async function StoryPage({
       <ArticleRail title={story.title} slug={story.slug} storyId={story.id} saved={saved} signedIn={Boolean(user)} />
       <header className="mx-auto max-w-3xl px-4 pt-10 sm:px-6">
         <CategoryChip category={story.category} />
-        <h1 className="display mt-4 text-[clamp(2.4rem,6vw,4.6rem)]">{story.title}</h1>
-        {story.subtitle && <p className="mt-4 text-xl text-muted">{story.subtitle}</p>}
+        <h1 className="display type-texture mt-4 text-[clamp(2.4rem,6vw,4.6rem)]">{story.title}</h1>
+        {story.subtitle && <p className="deck mt-4 text-xl text-muted sm:text-[2rem]">{story.subtitle}</p>}
         <p className="mt-4 text-lg leading-8 text-muted">{story.dek}</p>
         <StoryMeta story={story} />
       </header>
@@ -71,7 +71,7 @@ export default async function StoryPage({
         <StickyDiscussion storyId={story.id} notes={comments} userId={actor?.id} />
         {related.length > 0 && (
           <section className="mt-16">
-            <h2 className="display text-3xl">Related stories</h2>
+            <h2 className="deck text-3xl sm:text-[2.5rem]">Related stories</h2>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               {related.map((item) => (
                 <FeatureCard key={item.id} story={item} />

@@ -3,9 +3,10 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
-  --font-sans: var(--font-geist-sans), "Segoe UI", sans-serif;
+  --font-sans: var(--font-montserrat), "Montserrat", "Segoe UI", sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  --font-serif: var(--font-instrument), "Times New Roman", serif;
+  --font-serif: "New American Vintage", var(--font-playfair), "Playfair Display", "Times New Roman", serif;
+  --font-headline: "Nersans Three", var(--font-nersans), sans-serif;
   --color-bg: var(--bg);
   --color-bg-elevated: var(--bg-elevated);
   --color-fg: var(--fg);
@@ -89,6 +90,8 @@ body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-sans);
+  font-weight: 400;
+  line-height: 1.65;
   min-height: 100vh;
   text-rendering: optimizeLegibility;
 }
@@ -103,14 +106,23 @@ body {
   outline-offset: 3px;
 }
 
-.grain {
+/* Texturelabs Grunge 289L — lighten at 100% over dark ink only.
+   On paper, the floodcoat is darker than the page so lighten is a no-op. */
+.ink-grain {
   pointer-events: none;
-  position: fixed;
   inset: 0;
+  opacity: 1;
+  mix-blend-mode: lighten;
+  background-color: #000;
+  background-image: url("/textures/grunge-289l.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.grain {
+  position: fixed;
   z-index: 80;
-  opacity: 0.045;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.9'/%3E%3C/svg%3E");
 }
 
 .atmosphere {
@@ -165,15 +177,29 @@ body {
   border: 1px solid var(--glass-border);
 }
 
+/* Headers / Nersans Three — mastheads, major headlines, oversized stats. */
 .display {
-  font-family: var(--font-sans);
-  letter-spacing: -0.045em;
-  line-height: 0.96;
-  font-weight: 560;
+  font-family: var(--font-headline);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 0.92;
+  text-transform: uppercase;
 }
 
+/* Subheaders / New American Vintage — decks, subheads, pull quotes. */
+.deck,
 .serif {
   font-family: var(--font-serif);
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  text-transform: none;
+}
+
+/* Noise 1.4 / radius 2.4 / clip-to-shape off. Headers and stats 48px+. */
+.type-texture {
+  filter: url(#headline-texture);
 }
 
 /* Same typeface as article body paragraphs. Color is set by the caller. */
@@ -183,6 +209,16 @@ body {
   font-style: normal;
   letter-spacing: normal;
   text-transform: none;
+}
+
+.caption {
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
+
+.label {
+  font-family: var(--font-sans);
+  font-weight: 700;
 }
 
 .progress {
@@ -284,14 +320,13 @@ body {
 }
 
 .prose-shift h2 {
-  font-size: 1.65rem;
-  letter-spacing: -0.03em;
+  font-size: clamp(2rem, 4vw, 3.125rem);
   margin: 2.1em 0 0.7em;
-  line-height: 1.15;
 }
 
 .prose-shift h3 {
   font-size: 1.2rem;
+  font-weight: 700;
   margin: 1.8em 0 0.5em;
 }
 
@@ -313,8 +348,13 @@ body {
   z-index: 90;
   display: grid;
   place-items: center;
+  isolation: isolate;
   background: var(--bg);
   transition: opacity 520ms ease;
+}
+
+.splash-overlay .ink-grain {
+  position: absolute;
 }
 
 .splash-overlay-exit {
@@ -351,22 +391,14 @@ body {
 }
 
 .splash-title-shift {
-  font-family: var(--font-sans);
-  font-size: 1.15rem;
-  font-weight: 600;
-  letter-spacing: -0.04em;
+  font-size: 1.05rem;
   color: var(--fg);
 }
 
 .splash-title-kicker {
-  font-family: var(--font-sans);
-  font-size: 1.125rem;
-  line-height: 1.8;
-  font-weight: 400;
-  font-style: normal;
-  letter-spacing: normal;
-  text-transform: none;
-  color: var(--muted);
+  font-size: clamp(2.75rem, 9vw, 6.5rem);
+  text-align: center;
+  color: var(--fg);
 }
 
 .splash-title-visible {
