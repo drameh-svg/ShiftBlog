@@ -14,13 +14,11 @@ export function MidtermPoll({
   question,
   options,
   selectedOptionId,
-  signedIn,
 }: {
   pollId: string;
   question: string;
   options: PollChoice[];
   selectedOptionId: string | null;
-  signedIn: boolean;
 }) {
   const [choiceId, setChoiceId] = useState(selectedOptionId);
   const [counts, setCounts] = useState(() => Object.fromEntries(options.map((option) => [option.id, option.votes])));
@@ -32,7 +30,7 @@ export function MidtermPoll({
   );
 
   async function vote(optionId: string) {
-    if (!signedIn || pending || optionId === choiceId) return;
+    if (pending || optionId === choiceId) return;
     const previous = choiceId;
     setError(null);
     setPending(true);
@@ -64,9 +62,7 @@ export function MidtermPoll({
       <p className="text-[11px] uppercase tracking-[0.18em] text-lime">2026 midterms</p>
       <h2 className="display mt-3 text-3xl sm:text-4xl">{question}</h2>
       <p className="mt-3 max-w-xl text-sm leading-6 text-muted">
-        {signedIn
-          ? "Your answer is added to SHIFT’s poll spreadsheet. You can change it."
-          : "Sign up with your email below, then choose an answer. Results update as students vote."}
+        One vote, no account required. Results update as students answer.
       </p>
       <div className="mt-8 space-y-3">
         {options.map((option) => {
@@ -77,7 +73,7 @@ export function MidtermPoll({
             <button
               key={option.id}
               type="button"
-              disabled={pending || !signedIn}
+              disabled={pending}
               onClick={() => vote(option.id)}
               className={`relative w-full overflow-hidden rounded-[1.2rem] border px-4 py-4 text-left transition ${
                 selected ? "border-lime" : "border-line hover:border-purple/50"
@@ -99,7 +95,7 @@ export function MidtermPoll({
         })}
       </div>
       {error && <p className="mt-4 text-sm text-danger">{error}</p>}
-      {signedIn && choiceId && (
+      {choiceId && (
         <p className="mt-4 text-sm text-muted">
           You voted. You can change your answer.
         </p>

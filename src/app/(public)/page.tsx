@@ -140,9 +140,9 @@ export default async function HomePage() {
 
         <section className="py-6">
           <div className="flex items-end justify-between">
-            <h2 className="display text-3xl">Get Involved</h2>
+            <h2 className="display text-3xl">Make your voice heard</h2>
             <Link href="/involve" className="text-sm text-purple">
-              Make Your Voice Heard →
+              Take the poll →
             </Link>
           </div>
           {poll && (
@@ -154,7 +154,7 @@ export default async function HomePage() {
               <h3 className="display mt-3 text-3xl">{poll.question}</h3>
               <p className="mt-3 text-sm leading-6 text-muted">
                 {poll._count.votes === 0
-                  ? "Sign up with email, then take the midterms poll."
+                  ? "No votes yet. Take the poll — no account required."
                   : `${poll._count.votes} ${poll._count.votes === 1 ? "student has" : "students have"} answered.`}
               </p>
               <p className="mt-6 text-sm text-purple">Make your voice heard →</p>

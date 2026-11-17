@@ -16,7 +16,7 @@ export default async function EditorInvolvePage() {
       },
     }),
   ]);
-  const votes = pollVotes.filter((vote) => !isGuestEmail(vote.user.email));
+  const votes = pollVotes;
 
   return (
     <div>
@@ -47,8 +47,8 @@ export default async function EditorInvolvePage() {
               {votes.map((vote) => (
                 <tr key={vote.id} className="border-t border-line">
                   <td className="px-4 py-2 text-muted">{formatDate(vote.updatedAt)}</td>
-                  <td className="px-4 py-2">{vote.user.email}</td>
-                  <td className="px-4 py-2">{vote.user.name}</td>
+                  <td className="px-4 py-2">{isGuestEmail(vote.user.email) ? "" : vote.user.email}</td>
+                  <td className="px-4 py-2">{isGuestEmail(vote.user.email) ? "Anonymous" : vote.user.name}</td>
                   <td className="px-4 py-2 text-muted">{vote.poll.question}</td>
                   <td className="px-4 py-2">{vote.option.label}</td>
                 </tr>

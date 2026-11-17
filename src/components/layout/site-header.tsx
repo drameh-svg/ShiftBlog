@@ -73,21 +73,7 @@ export function SiteHeader({ user }: { user: SessionUser | null }) {
               >
                 Desk
               </Link>
-            ) : user ? (
-              <Link
-                href="/profile"
-                className="inline-flex h-10 items-center rounded-full border border-line px-3 text-sm"
-              >
-                {user.name.split(" ")[0]}
-              </Link>
-            ) : (
-              <Link
-                href="/sign-up"
-                className="inline-flex h-10 items-center rounded-full border border-line px-3 text-sm"
-              >
-                Sign up
-              </Link>
-            )}
+            ) : null}
           </div>
         </div>
       </header>

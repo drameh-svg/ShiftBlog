@@ -19,15 +19,16 @@ export async function GET() {
     },
   });
   const csv = spreadsheetCsv(
-    votes
-      .filter((vote) => !isGuestEmail(vote.user.email))
-      .map((vote) => ({
-      submittedAt: vote.updatedAt.toISOString(),
-      email: vote.user.email,
-      name: vote.user.name,
-      question: vote.poll.question,
-      answer: vote.option.label,
-    })),
+    votes.map((vote) => {
+      const guest = isGuestEmail(vote.user.email);
+      return {
+        submittedAt: vote.updatedAt.toISOString(),
+        email: guest ? "" : vote.user.email,
+        name: guest ? "Anonymous" : vote.user.name,
+        question: vote.poll.question,
+        answer: vote.option.label,
+      };
+    }),
   );
   return new NextResponse(csv, {
     headers: {

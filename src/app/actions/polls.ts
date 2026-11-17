@@ -2,15 +2,12 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "@/lib/auth";
+import { getActor } from "@/lib/guest";
 import { isGuestEmail } from "@/lib/public-user";
 import { appendSpreadsheetRow } from "@/lib/spreadsheet";
 
 export async function castPollVote(pollId: string, optionId: string) {
-  const user = await getCurrentUser();
-  if (!user || isGuestEmail(user.email)) {
-    return { error: "Sign up with your email to record your answer on the spreadsheet." };
-  }
+  const user = await getActor();
   const option = await prisma.pollOption.findFirst({
     where: { id: optionId, pollId },
     include: { poll: { select: { question: true } } },
@@ -22,10 +19,11 @@ export async function castPollVote(pollId: string, optionId: string) {
     update: { optionId },
   });
   try {
+    const guest = isGuestEmail(user.email);
     await appendSpreadsheetRow({
       submittedAt: new Date().toISOString(),
-      email: user.email,
-      name: user.name,
+      email: guest ? "" : user.email,
+      name: guest ? "Anonymous" : user.name,
       question: option.poll.question,
       answer: option.label,
     });
