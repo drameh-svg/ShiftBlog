@@ -3,13 +3,15 @@ import type { NextRequest } from "next/server";
 import { SESSION_COOKIE, readSessionToken } from "@/lib/session-token";
 import { GUEST_COOKIE, guestCookieOptions, isGuestKey } from "@/lib/guest-cookie";
 import { isEditorial } from "@/lib/permissions";
+import { copyCookies, withSupabaseSession } from "@/lib/supabase/proxy";
 
 export async function proxy(request: NextRequest) {
-  const response = NextResponse.next();
+  let response = NextResponse.next({ request });
   const guest = request.cookies.get(GUEST_COOKIE)?.value;
   if (!isGuestKey(guest)) {
     response.cookies.set(GUEST_COOKIE, crypto.randomUUID(), guestCookieOptions());
   }
+  response = await withSupabaseSession(request, response);
 
   if (!request.nextUrl.pathname.startsWith("/editor")) {
     return response;
@@ -21,7 +23,8 @@ export async function proxy(request: NextRequest) {
   if (!session || !isEditorial(session.role)) {
     const signIn = new URL("/sign-in", request.url);
     signIn.searchParams.set("next", request.nextUrl.pathname);
-    return NextResponse.redirect(signIn);
+    const redirect = NextResponse.redirect(signIn);
+    return copyCookies(response, redirect);
   }
 
   return response;

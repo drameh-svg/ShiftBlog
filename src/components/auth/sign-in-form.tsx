@@ -9,7 +9,11 @@ export function SignInForm({ next = "" }: { next?: string }) {
     <div className="mx-auto max-w-md px-4 py-16">
       <h1 className="display text-4xl">Editorial desk</h1>
       <p className="mt-3 text-sm text-muted">
-        Readers post anonymously and do not need an account. This sign-in is only for SHIFT editors publishing stories.
+        This sign-in is only for SHIFT editors publishing stories. Readers sign up with email at{" "}
+        <a href="/sign-up" className="text-purple">
+          /sign-up
+        </a>
+        .
       </p>
       <form action={action} className="mt-8 space-y-4">
         {next ? <input type="hidden" name="next" value={next} /> : null}

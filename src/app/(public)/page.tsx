@@ -154,7 +154,7 @@ export default async function HomePage() {
               <h3 className="display mt-3 text-3xl">{poll.question}</h3>
               <p className="mt-3 text-sm leading-6 text-muted">
                 {poll._count.votes === 0
-                  ? "No votes yet. Take the poll — no account required."
+                  ? "Sign up with email, then take the midterms poll."
                   : `${poll._count.votes} ${poll._count.votes === 1 ? "student has" : "students have"} answered.`}
               </p>
               <p className="mt-6 text-sm text-purple">Make your voice heard →</p>

@@ -10,6 +10,9 @@ import {
   getCurrentUser,
   verifyPassword,
 } from "@/lib/auth";
+import { getRequestOrigin } from "@/lib/origin";
+import { syncPublicUser } from "@/lib/public-user";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 const credentials = z.object({
   email: z.string().email(),
@@ -57,13 +60,79 @@ export async function signInAction(_: unknown, formData: FormData) {
   redirect(next ?? "/editor");
 }
 
-export async function signUpAction() {
-  return { error: "SHIFT no longer uses public accounts. Discuss and comment anonymously." };
+const publicCredentials = z.object({
+  name: z.string().min(2).max(80).optional(),
+  email: z.string().email(),
+  password: z.string().min(8),
+});
+
+export async function signUpAction(_: unknown, formData: FormData) {
+  const parsed = publicCredentials.safeParse({
+    name: String(formData.get("name") ?? "").trim() || undefined,
+    email: String(formData.get("email") ?? ""),
+    password: String(formData.get("password") ?? ""),
+  });
+  if (!parsed.success) {
+    return { error: "Enter your name, a valid email, and a password of at least 8 characters." };
+  }
+  const supabase = await createServerSupabaseClient();
+  if (!supabase) {
+    return { error: "Email signup is not configured yet. Add the Supabase URL and anon key." };
+  }
+  const origin = await getRequestOrigin();
+  const next = safeNextPath(formData.get("next")) ?? "/involve";
+  const { data, error } = await supabase.auth.signUp({
+    email: parsed.data.email.toLowerCase(),
+    password: parsed.data.password,
+    options: {
+      emailRedirectTo: `${origin}/auth/callback?next=${encodeURIComponent(next)}`,
+      data: { name: parsed.data.name ?? parsed.data.email.split("@")[0] },
+    },
+  });
+  if (error) return { error: error.message };
+  if (data.user?.email) {
+    await syncPublicUser({
+      email: data.user.email,
+      name: parsed.data.name ?? null,
+    });
+  }
+  if (data.session) {
+    redirect(next);
+  }
+  return { ok: true, message: "Check your email to confirm your SHIFT account, then come back to vote." };
+}
+
+export async function publicSignInAction(_: unknown, formData: FormData) {
+  const parsed = credentials.safeParse({
+    email: String(formData.get("email") ?? ""),
+    password: String(formData.get("password") ?? ""),
+  });
+  if (!parsed.success) {
+    return { error: "Enter a valid email and password." };
+  }
+  const supabase = await createServerSupabaseClient();
+  if (!supabase) {
+    return { error: "Email signup is not configured yet. Add the Supabase URL and anon key." };
+  }
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: parsed.data.email.toLowerCase(),
+    password: parsed.data.password,
+  });
+  if (error) return { error: error.message };
+  if (data.user?.email) {
+    await syncPublicUser({
+      email: data.user.email,
+      name: typeof data.user.user_metadata?.name === "string" ? data.user.user_metadata.name : null,
+    });
+  }
+  redirect(safeNextPath(formData.get("next")) ?? "/involve");
 }
 
 export async function signOutAction() {
   const jar = await cookies();
   jar.delete(SESSION_COOKIE);
+  const supabase = await createServerSupabaseClient();
+  if (supabase) await supabase.auth.signOut();
   redirect("/");
 }
 

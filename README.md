@@ -4,14 +4,15 @@ A USC student-led publication on technology, artificial intelligence, ethics, an
 
 **Read → Discuss → Act**
 
-Readers post on stories and discussions anonymously. No public account is required.
+Readers can post on stories and discussions anonymously. Get Involved uses email signup (Supabase Auth) so poll answers can be saved to a spreadsheet.
 
 ## Stack
 
 - Next.js 16 (App Router) + TypeScript
 - Tailwind CSS 4
 - Prisma + PostgreSQL (Neon in production)
-- Signed HTTP-only sessions (`jose`) for the editorial desk only
+- Signed HTTP-only sessions (`jose`) for the editorial desk
+- Supabase Auth for public email signup
 
 ## Setup
 
@@ -55,7 +56,7 @@ If you open a Cursor Cloud preview URL (`*.agent.cvm.dev`) and see **HTTP 502**,
 
 ## Editorial accounts
 
-These are seeded for the desk. Change them before any real deployment. Public sign-up is disabled.
+These are seeded for the desk. Change them before any real deployment. Public readers sign up with email through Supabase Auth (`/sign-up`); they cannot open `/editor`.
 
 | Role | Email | Password |
 | --- | --- | --- |
@@ -70,7 +71,10 @@ Editorial authorization is enforced in `src/proxy.ts` and again in the editorial
 - `/read` article index (Campus, Latest news, Op-eds)
 - `/stories/[slug]` individual articles, with anonymous notes
 - `/discuss` anonymous discussion threads
-- `/involve` midterms poll (no account required)
+- `/involve` midterms poll (email signup via Supabase Auth; answers go to the editorial spreadsheet)
+- `/sign-up` public email signup
+- `/editor/involve` poll spreadsheet and CSV download
+- Optional Google Sheet webhook: set `GOOGLE_SHEETS_WEBHOOK_URL` and paste `scripts/google-sheets-poll-webhook.js` into Apps Script
 - `/submit` idea and writing requests (no account required; editors review at the desk)
 - `/editor` private SHIFT Editorial desk
 
