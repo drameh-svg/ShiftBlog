@@ -60,7 +60,7 @@ export function MidtermPoll({
   return (
     <section className="rounded-[1.8rem] border border-line bg-bg-elevated/60 p-6 sm:p-8">
       <p className="text-[11px] uppercase tracking-[0.18em] text-lime">2026 midterms</p>
-      <h2 className="display mt-3 text-3xl sm:text-4xl">{question}</h2>
+      <h2 className="deck mt-3 text-3xl sm:text-[2.5rem]">{question}</h2>
       <p className="mt-3 max-w-xl text-sm leading-6 text-muted">
         One vote, no account required. Results update as students answer.
       </p>
@@ -85,7 +85,7 @@ export function MidtermPoll({
                 aria-hidden
               />
               <span className="relative z-10 flex items-center justify-between gap-4">
-                <span className="text-base font-medium text-fg">{option.label}</span>
+                <span className="text-base font-bold text-fg">{option.label}</span>
                 <span className="text-sm text-muted">
                   {total === 0 && !choiceId ? "Vote" : `${percent}% · ${votes}`}
                 </span>

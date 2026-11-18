@@ -52,7 +52,7 @@ export function DiscussShell({
     <aside className="discuss-sidebar flex h-full w-full flex-col border-r border-line md:w-[17.5rem] md:shrink-0">
       <div className="border-b border-line px-4 py-4">
         <p className="text-[11px] uppercase tracking-[0.18em] text-lime">Discuss</p>
-        <h2 className="display mt-1 text-2xl">Topics</h2>
+        <h2 className="deck mt-1 text-2xl">Topics</h2>
         <p className="mt-1 text-xs leading-5 text-muted">Pick a channel. Take a stance. Then talk.</p>
       </div>
       <nav className="min-h-0 flex-1 overflow-y-auto px-2 py-3" aria-label="Discussion topics">

@@ -56,7 +56,7 @@ export function SiteHeader({ user }: { user: SessionUser | null }) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`rounded-full px-3 py-1.5 text-sm transition ${active ? "bg-purple/15 text-purple" : "text-muted hover:text-fg"}`}
+                  className={`rounded-full px-3 py-1.5 text-sm font-bold transition ${active ? "bg-purple/15 text-purple" : "text-muted hover:text-fg"}`}
                 >
                   {item.label}
                 </Link>

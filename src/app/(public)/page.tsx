@@ -48,7 +48,7 @@ export default async function HomePage() {
           {lead ? (
             <>
               <div>
-                <p className="text-[12px] uppercase tracking-[0.2em] text-lime">
+                <p className="label text-[12px] uppercase tracking-[0.2em] text-lime">
                   {lead.tags.map((item) => item.tag.name).slice(0, 2).join(" · ")}
                 </p>
                 <h1 className="display mt-4 max-w-xl text-[clamp(2.8rem,7vw,5.4rem)]">
@@ -111,7 +111,7 @@ export default async function HomePage() {
         {briefs.length > 0 && (
         <section className="py-6">
           <div className="flex items-end justify-between">
-            <h2 className="display text-3xl">The Brief</h2>
+            <h2 className="deck text-3xl sm:text-[2.5rem]">The Brief</h2>
             <Link href="/read?category=NEWS" className="text-sm text-purple">
               See What’s Happening at USC →
             </Link>
@@ -126,7 +126,7 @@ export default async function HomePage() {
 
         <section className="py-14">
           <div className="flex items-end justify-between">
-            <h2 className="display text-3xl">Trending Discussions</h2>
+            <h2 className="deck text-3xl sm:text-[2.5rem]">Trending Discussions</h2>
             <Link href="/discuss" className="text-sm text-purple">
               Join the Discussion →
             </Link>
@@ -140,7 +140,7 @@ export default async function HomePage() {
 
         <section className="py-6">
           <div className="flex items-end justify-between">
-            <h2 className="display text-3xl">Make your voice heard</h2>
+            <h2 className="deck text-3xl sm:text-[2.5rem]">Make your voice heard</h2>
             <Link href="/involve" className="text-sm text-purple">
               Take the poll →
             </Link>
@@ -151,7 +151,7 @@ export default async function HomePage() {
               className="card-hover mt-6 block rounded-[1.6rem] border border-line bg-bg-elevated/70 p-7"
             >
               <p className="text-[11px] uppercase tracking-[0.16em] text-lime">2026 midterms</p>
-              <h3 className="display mt-3 text-3xl">{poll.question}</h3>
+              <h3 className="deck mt-3 text-3xl">{poll.question}</h3>
               <p className="mt-3 text-sm leading-6 text-muted">
                 {poll._count.votes === 0
                   ? "No votes yet. Take the poll — no account required."

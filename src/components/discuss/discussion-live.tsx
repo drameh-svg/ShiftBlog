@@ -160,7 +160,7 @@ function ArgumentColumn({
   const [body, setBody] = useState("");
   return (
     <section>
-      <h2 className="display text-3xl">{title}</h2>
+      <h2 className="deck text-3xl">{title}</h2>
       <ol className="mt-4 space-y-3">
         {items.map((item) => (
           <li key={item.id} className="rounded-[1.2rem] border border-line p-4">

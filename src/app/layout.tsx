@@ -1,23 +1,32 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import { Geist_Mono, Montserrat } from "next/font/google";
+import localFont from "next/font/local";
 import { themeBootScript } from "@/lib/theme-script";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const nersans = localFont({
+  src: "./fonts/NersansThree.otf",
+  variable: "--font-nersans",
+  display: "swap",
+  weight: "400",
+});
+
+const alteHaas = localFont({
+  src: "./fonts/AlteHaasGroteskBold.ttf",
+  variable: "--font-alte-haas",
+  display: "swap",
+  weight: "700",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
-});
-
-const instrument = Instrument_Serif({
-  variable: "--font-instrument",
-  subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -41,16 +50,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${instrument.variable} dark h-full antialiased`}
+      className={`${montserrat.variable} ${nersans.variable} ${alteHaas.variable} ${geistMono.variable} dark h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
       </head>
-      <body className="flex min-h-full flex-col bg-bg font-sans text-fg">
-        <div className="grain" aria-hidden />
-        {children}
-      </body>
+      <body className="flex min-h-full flex-col bg-bg font-sans text-fg">{children}</body>
     </html>
   );
 }

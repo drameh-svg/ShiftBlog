@@ -72,7 +72,7 @@ export function StickyDiscussion({
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-[11px] uppercase tracking-[0.18em] text-lime">Discussion</p>
-          <h2 className="display mt-2 text-4xl">What do you think?</h2>
+          <h2 className="deck mt-2 text-4xl">What do you think?</h2>
           <p className="mt-2 max-w-xl text-sm text-muted">
             Leave a note on the shared board. Switch to list view if you want a linear feed.
           </p>

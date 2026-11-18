@@ -81,7 +81,7 @@ export function EditorialVisual({
             fill="#fff"
             opacity="0.22"
             fontSize="92"
-            fontFamily="var(--font-sans)"
+            fontFamily="var(--font-headline)"
             letterSpacing="-4"
           >
             SHIFT

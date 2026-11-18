@@ -171,7 +171,7 @@ export function ChannelChat({
     <div className="flex h-full min-h-0 flex-col">
       <header className="border-b border-line px-4 py-3 sm:px-6">
         <p className="text-[11px] uppercase tracking-[0.16em] text-purple">{topicLabel}</p>
-        <h1 className="display mt-1 text-2xl sm:text-3xl">{title}</h1>
+        <h1 className="deck mt-1 text-2xl sm:text-3xl">{title}</h1>
         <p className="mt-2 max-w-3xl text-sm leading-6 text-muted">{prompt}</p>
         <div className="mt-3">
           <div className="flex h-2 overflow-hidden rounded-full bg-line">

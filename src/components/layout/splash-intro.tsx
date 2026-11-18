@@ -37,8 +37,8 @@ export function SplashIntro() {
           style={{ transform: `rotate(${turns * 360}deg) scale(1)` }}
         />
         <p className={`splash-title ${step === "spin" ? "" : "splash-title-visible"}`}>
-          <span className="splash-title-shift">SHIFT</span>
-          <span className="splash-title-kicker">Public Policy Blog</span>
+          <span className="splash-title-shift display">SHIFT</span>
+          <span className="splash-title-kicker display">Public Policy</span>
         </p>
       </div>
     </div>

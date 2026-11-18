@@ -15,7 +15,7 @@ export default function SubmitPage() {
         <div className="mt-10 grid gap-5 md:grid-cols-2">
           <Link href="/submit/idea" className="card-hover rounded-[1.6rem] border border-line bg-bg-elevated/70 p-7">
             <p className="text-[11px] uppercase tracking-[0.16em] text-purple">Path one</p>
-            <h2 className="display mt-3 text-3xl">Submit an Idea</h2>
+            <h2 className="deck mt-3 text-3xl">Submit an Idea</h2>
             <p className="mt-3 text-sm leading-6 text-muted">
               A campus issue, a policy question, a debate, a story we should investigate. You do not need a finished draft.
             </p>
@@ -23,7 +23,7 @@ export default function SubmitPage() {
           </Link>
           <Link href="/submit/writing" className="card-hover rounded-[1.6rem] border border-line bg-bg-elevated/70 p-7">
             <p className="text-[11px] uppercase tracking-[0.16em] text-lime">Path two</p>
-            <h2 className="display mt-3 text-3xl">Submit Your Writing</h2>
+            <h2 className="deck mt-3 text-3xl">Submit Your Writing</h2>
             <p className="mt-3 text-sm leading-6 text-muted">
               Opinion, analysis, explainers, campus reporting, interviews, research. Pitch plus draft, then editorial review.
             </p>

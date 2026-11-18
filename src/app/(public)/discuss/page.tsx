@@ -11,7 +11,7 @@ export default async function DiscussPage() {
     <div className="grid h-full place-items-center px-6 text-center">
       <div>
         <p className="text-[11px] uppercase tracking-[0.18em] text-lime">Discuss</p>
-        <h1 className="display mt-2 text-3xl">No topics yet</h1>
+        <h1 className="deck mt-2 text-3xl">No topics yet</h1>
         <p className="mt-2 text-sm text-muted">A prompt will appear here when the desk opens a topic.</p>
       </div>
     </div>

@@ -210,7 +210,7 @@ export function StoryEditor({ story, canDelete }: { story: Story; canDelete: boo
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
           <button type="button" className="absolute inset-0 bg-black/50" aria-label="Close" onClick={() => setPublishing(false)} />
           <div className="relative w-full max-w-md rounded-[1.4rem] bg-bg p-6 shadow-glow">
-            <h2 className="display text-2xl">Ready to publish?</h2>
+            <h2 className="deck text-2xl">Ready to publish?</h2>
             <dl className="mt-4 space-y-2 text-sm">
               <div><dt className="text-faint">Title</dt><dd>{title}</dd></div>
               <div><dt className="text-faint">Subtitle</dt><dd>{subtitle || "—"}</dd></div>
@@ -270,13 +270,13 @@ function BlockEditor({
           value={block.text}
           onChange={(event) => onChange({ ...block, text: event.target.value })}
           placeholder={block.type === "p" ? "Write, or paste…" : block.type}
-          className={`w-full resize-none bg-transparent outline-none ${block.type === "h2" ? "text-2xl tracking-[-0.03em]" : block.type === "pullquote" ? "serif text-2xl text-purple" : "text-lg leading-8"}`}
+          className={`w-full resize-none bg-transparent outline-none ${block.type === "h2" ? "deck text-[2rem]" : block.type === "pullquote" ? "deck text-2xl text-purple" : block.type === "quote" ? "deck text-2xl" : "text-lg leading-8"}`}
           rows={block.type === "p" ? 4 : 2}
         />
       ) : null}
       {block.type === "stat" && (
         <div className="flex gap-2">
-          <input value={block.value} onChange={(event) => onChange({ ...block, value: event.target.value })} placeholder="Stat" className="w-28 bg-transparent text-3xl outline-none" />
+          <input value={block.value} onChange={(event) => onChange({ ...block, value: event.target.value })} placeholder="Stat" className="display w-28 bg-transparent text-3xl outline-none" />
           <input value={block.label} onChange={(event) => onChange({ ...block, label: event.target.value })} placeholder="Label" className="flex-1 bg-transparent outline-none" />
         </div>
       )}
