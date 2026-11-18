@@ -38,10 +38,9 @@ export function SplashIntro() {
         />
         <p className={`splash-title ${step === "spin" ? "" : "splash-title-visible"}`}>
           <span className="splash-title-shift display">SHIFT</span>
-          <span className="splash-title-kicker display type-texture">Public Policy</span>
+          <span className="splash-title-kicker display">Public Policy</span>
         </p>
       </div>
-      <div className="ink-grain" />
     </div>
   );
 }

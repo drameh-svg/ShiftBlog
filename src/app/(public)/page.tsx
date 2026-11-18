@@ -51,7 +51,7 @@ export default async function HomePage() {
                 <p className="label text-[12px] uppercase tracking-[0.2em] text-lime">
                   {lead.tags.map((item) => item.tag.name).slice(0, 2).join(" · ")}
                 </p>
-                <h1 className="display type-texture mt-4 max-w-xl text-[clamp(2.8rem,7vw,5.4rem)]">
+                <h1 className="display mt-4 max-w-xl text-[clamp(2.8rem,7vw,5.4rem)]">
                   {lead.title}
                 </h1>
                 <p className="mt-6 max-w-lg text-lg leading-8 text-muted">{lead.dek}</p>
@@ -73,7 +73,7 @@ export default async function HomePage() {
             </>
           ) : (
             <div>
-              <h1 className="display type-texture text-5xl">SHIFT Public Policy</h1>
+              <h1 className="display text-5xl">SHIFT Public Policy</h1>
               <p className="mt-4 text-muted">Stories are being prepared.</p>
             </div>
           )}
@@ -173,7 +173,7 @@ export default async function HomePage() {
           <Atmosphere />
           <div className="relative max-w-xl">
             <p className="text-[11px] uppercase tracking-[0.18em] text-lime">Have something to say?</p>
-            <h2 className="display type-texture mt-3 text-4xl sm:text-5xl">SHIFT publishes student thinking that the institution needs to hear.</h2>
+            <h2 className="display mt-3 text-4xl sm:text-5xl">SHIFT publishes student thinking that the institution needs to hear.</h2>
             <p className="mt-4 text-muted">
               Submit an idea we should investigate, or send writing for editorial review. No account required.
             </p>

@@ -83,7 +83,7 @@ export function StoryEditor({ story, canDelete }: { story: Story; canDelete: boo
           value={title}
           onChange={(event) => setTitle(event.target.value)}
           placeholder="Add title"
-          className="display type-texture w-full bg-transparent text-4xl outline-none placeholder:text-faint sm:text-5xl"
+          className="display w-full bg-transparent text-4xl outline-none placeholder:text-faint sm:text-5xl"
         />
         <input
           value={subtitle}
@@ -276,7 +276,7 @@ function BlockEditor({
       ) : null}
       {block.type === "stat" && (
         <div className="flex gap-2">
-          <input value={block.value} onChange={(event) => onChange({ ...block, value: event.target.value })} placeholder="Stat" className="display type-texture w-28 bg-transparent text-3xl outline-none" />
+          <input value={block.value} onChange={(event) => onChange({ ...block, value: event.target.value })} placeholder="Stat" className="display w-28 bg-transparent text-3xl outline-none" />
           <input value={block.label} onChange={(event) => onChange({ ...block, label: event.target.value })} placeholder="Label" className="flex-1 bg-transparent outline-none" />
         </div>
       )}

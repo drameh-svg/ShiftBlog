@@ -25,7 +25,7 @@ export default async function InvolvePage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       <p className="text-[11px] uppercase tracking-[0.18em] text-lime">Get Involved</p>
-      <h1 className="display type-texture mt-2 max-w-3xl text-5xl">Make your voice heard</h1>
+      <h1 className="display mt-2 max-w-3xl text-5xl">Make your voice heard</h1>
       <p className="mt-4 max-w-2xl text-lg leading-8 text-muted">
         The 2026 midterms asked students to show up. Tell SHIFT whether you voted — no account required.
       </p>

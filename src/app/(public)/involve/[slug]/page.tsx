@@ -12,7 +12,7 @@ export default async function OpportunityPage({ params }: { params: SlugParams }
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       <StatusBadge status={opportunity.status} />
-      <h1 className="display type-texture mt-4 text-4xl sm:text-5xl">{opportunity.title}</h1>
+      <h1 className="display mt-4 text-4xl sm:text-5xl">{opportunity.title}</h1>
       <p className="mt-4 text-lg text-muted">{opportunity.description}</p>
       <dl className="mt-8 grid gap-3 rounded-[1.4rem] border border-line p-5 text-sm sm:grid-cols-2">
         {opportunity.dateLabel && (

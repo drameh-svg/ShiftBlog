@@ -5,7 +5,7 @@
 @theme inline {
   --font-sans: var(--font-montserrat), "Montserrat", "Segoe UI", sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  --font-serif: "New American Vintage", var(--font-playfair), "Playfair Display", "Times New Roman", serif;
+  --font-serif: "Alte Haas Grotesk", var(--font-alte-haas), sans-serif;
   --font-headline: "Nersans Three", var(--font-nersans), sans-serif;
   --color-bg: var(--bg);
   --color-bg-elevated: var(--bg-elevated);
@@ -106,25 +106,6 @@ body {
   outline-offset: 3px;
 }
 
-/* Texturelabs Grunge 289L — lighten at 100% over dark ink only.
-   On paper, the floodcoat is darker than the page so lighten is a no-op. */
-.ink-grain {
-  pointer-events: none;
-  inset: 0;
-  opacity: 1;
-  mix-blend-mode: lighten;
-  background-color: #000;
-  background-image: url("/textures/grunge-289l.jpg");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
-.grain {
-  position: fixed;
-  z-index: 80;
-}
-
 .atmosphere {
   pointer-events: none;
   position: absolute;
@@ -186,20 +167,15 @@ body {
   text-transform: uppercase;
 }
 
-/* Subheaders / New American Vintage — decks, subheads, pull quotes. */
+/* Subheaders / Alte Haas Grotesk Bold. */
 .deck,
 .serif {
   font-family: var(--font-serif);
-  font-weight: 400;
+  font-weight: 700;
   font-style: normal;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.02em;
   line-height: 1.15;
   text-transform: none;
-}
-
-/* Noise 1.4 / radius 2.4 / clip-to-shape off. Headers and stats 48px+. */
-.type-texture {
-  filter: url(#headline-texture);
 }
 
 /* Same typeface as article body paragraphs. Color is set by the caller. */
@@ -348,13 +324,8 @@ body {
   z-index: 90;
   display: grid;
   place-items: center;
-  isolation: isolate;
   background: var(--bg);
   transition: opacity 520ms ease;
-}
-
-.splash-overlay .ink-grain {
-  position: absolute;
 }
 
 .splash-overlay-exit {

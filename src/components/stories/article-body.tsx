@@ -63,7 +63,7 @@ function BlockView({ block }: { block: Block }) {
     case "stat":
       return (
         <figure className="my-10 rounded-[1.5rem] border border-line bg-bg-elevated px-6 py-8 text-center">
-          <p className="display type-texture text-5xl text-lime">{block.value}</p>
+          <p className="display text-5xl text-lime">{block.value}</p>
           <figcaption className="caption mt-2 text-sm text-muted">{block.label}</figcaption>
         </figure>
       );

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Montserrat, Playfair_Display } from "next/font/google";
+import { Geist_Mono, Montserrat } from "next/font/google";
 import localFont from "next/font/local";
 import { themeBootScript } from "@/lib/theme-script";
 import "./globals.css";
@@ -17,11 +17,11 @@ const nersans = localFont({
   weight: "400",
 });
 
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
+const alteHaas = localFont({
+  src: "./fonts/AlteHaasGroteskBold.ttf",
+  variable: "--font-alte-haas",
+  display: "swap",
+  weight: "700",
 });
 
 const geistMono = Geist_Mono({
@@ -50,40 +50,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${montserrat.variable} ${nersans.variable} ${playfair.variable} ${geistMono.variable} dark h-full antialiased`}
+      className={`${montserrat.variable} ${nersans.variable} ${alteHaas.variable} ${geistMono.variable} dark h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
       </head>
-      <body className="flex min-h-full flex-col bg-bg font-sans text-fg">
-        <svg className="pointer-events-none absolute h-0 w-0 overflow-hidden" aria-hidden>
-          <filter
-            id="headline-texture"
-            x="-20%"
-            y="-30%"
-            width="140%"
-            height="160%"
-            filterUnits="objectBoundingBox"
-            primitiveUnits="userSpaceOnUse"
-            colorInterpolationFilters="sRGB"
-          >
-            <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="8" result="noise" />
-            <feGaussianBlur in="noise" stdDeviation="2.4" result="soft" />
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="noise"
-              scale="1.4"
-              xChannelSelector="R"
-              yChannelSelector="G"
-              result="worn"
-            />
-            <feBlend in="worn" in2="soft" mode="multiply" />
-          </filter>
-        </svg>
-        <div className="grain ink-grain" aria-hidden />
-        {children}
-      </body>
+      <body className="flex min-h-full flex-col bg-bg font-sans text-fg">{children}</body>
     </html>
   );
 }

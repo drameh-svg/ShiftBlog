@@ -7,7 +7,7 @@ export default function SubmitPage() {
       <Atmosphere />
       <div className="relative mx-auto max-w-5xl px-4 py-16 sm:px-6">
         <p className="text-[11px] uppercase tracking-[0.18em] text-lime">Submit</p>
-        <h1 className="display type-texture mt-3 max-w-3xl text-5xl">Have something SHIFT should take seriously?</h1>
+        <h1 className="display mt-3 max-w-3xl text-5xl">Have something SHIFT should take seriously?</h1>
         <p className="mt-4 max-w-xl text-lg text-muted">
           Two paths. One editorial desk. Every submission is reviewed by SHIFT Public Policy before anything is published.
           No account required.

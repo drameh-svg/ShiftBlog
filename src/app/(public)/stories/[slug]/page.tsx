@@ -56,7 +56,7 @@ export default async function StoryPage({
       <ArticleRail title={story.title} slug={story.slug} storyId={story.id} saved={saved} signedIn={Boolean(user)} />
       <header className="mx-auto max-w-3xl px-4 pt-10 sm:px-6">
         <CategoryChip category={story.category} />
-        <h1 className="display type-texture mt-4 text-[clamp(2.4rem,6vw,4.6rem)]">{story.title}</h1>
+        <h1 className="display mt-4 text-[clamp(2.4rem,6vw,4.6rem)]">{story.title}</h1>
         {story.subtitle && <p className="deck mt-4 text-xl text-muted sm:text-[2rem]">{story.subtitle}</p>}
         <p className="mt-4 text-lg leading-8 text-muted">{story.dek}</p>
         <StoryMeta story={story} />
